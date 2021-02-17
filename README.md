@@ -1,2 +1,2 @@
-# CS353-Project-31
+# CS353-31-ZooDBMS
 Operating Systems project.
