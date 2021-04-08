@@ -1,0 +1,9 @@
+function CoordinatorCagePage() {
+    return(
+        <div>
+            <h1>Hello</h1>
+        </div>
+    );
+}
+
+export default CoordinatorCagePage;
