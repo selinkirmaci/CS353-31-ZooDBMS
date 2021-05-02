@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function CoordinatorSideBar() {
+export default function CoordinatorSideBar(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -94,7 +94,7 @@ export default function CoordinatorSideBar() {
     };
     const handleClick = (index) => {
         if(index === 0)
-            setOpen(false);
+            window.location.href="/coordinatorhomepage";
         else if(index === 1)
             window.location.href="/coordinatorcagepage";
     };
@@ -108,7 +108,7 @@ export default function CoordinatorSideBar() {
                     [classes.appBarShift]: open,
                 })}
             >
-                <Toolbar>
+                <Toolbar color = "white">
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -119,7 +119,7 @@ export default function CoordinatorSideBar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography align = "center" variant="h6" noWrap>
-                        Coordinator Homepage
+                        {props.title}
                     </Typography>
                 </Toolbar>
             </AppBar>
