@@ -21,7 +21,8 @@ export default function AnimalCard(props) {
 
 
     const handleInfoPage = () => {
-
+        let a = "animalid";
+        window.location.href="/coordinatoranimalinfo?"+a;
     };
 
     var imageURL = '/images/' + props.animal + '.jpg';

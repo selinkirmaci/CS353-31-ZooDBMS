@@ -14,74 +14,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from '@material-ui/icons/Send';
+import AssignKeeperDialog from "./AssignKeeperDialog";
 
-const columns = [
-    { id: 'eventName', label: 'Event Name', minWidth: 170 },
-    { id: 'capacity', label: 'Capacity', minWidth: 170 },
-    {
-        id: 'date',
-        label: 'Date',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'time',
-        label: 'Time',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'location',
-        label: 'Location',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'duration',
-        label: 'Duration',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'speaker',
-        label: 'Speaker',
-        minWidth: 170,
-        align: 'right',
-    },
-    {
-        id: 'topic',
-        label: 'Topic',
-        minWidth: 170,
-        align: 'right',
-    },
-    { id: 'invite', label: 'Invite Veterinarian', minWidth: 50 ,align: 'right'},
-    { id: 'editEvent', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-    { id: 'deleteEvent', label: 'Delete Event', minWidth: 50 ,align: 'right',},
 
-];
-
-function createData(name, code, population, size) {
-    const density = population / size;
-    return { name, code, population, size, density };
-}
-
-const rows = [
-    createData('India', 'IN', 1324171354, 3287263),
-    createData('China', 'CN', 1403500365, 9596961),
-    createData('Italy', 'IT', 60483973, 301340),
-    createData('United States', 'US', 327167434, 9833520),
-    createData('Canada', 'CA', 37602103, 9984670),
-    createData('Australia', 'AU', 25475400, 7692024),
-    createData('Germany', 'DE', 83019200, 357578),
-    createData('Ireland', 'IE', 4857000, 70273),
-    createData('Mexico', 'MX', 126577691, 1972550),
-    createData('Japan', 'JP', 126317000, 377973),
-    createData('France', 'FR', 67022000, 640679),
-    createData('United Kingdom', 'GB', 67545757, 242495),
-    createData('Russia', 'RU', 146793744, 17098246),
-    createData('Nigeria', 'NG', 200962417, 923768),
-    createData('Brazil', 'BR', 210147125, 8515767),
-];
 
 const useStyles = makeStyles({
     root: {
@@ -91,21 +26,123 @@ const useStyles = makeStyles({
         maxHeight: 440,
     },
 });
+const useStyles2 = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+    },
+    paper: {
+        width: '80%',
+        maxHeight: 435,
+    },
+}));
 
 export default function EducationalTable() {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
+    const classes2 = useStyles2();
+    const [open2, setOpen2] = React.useState(false);
+    const [value, setValue] = React.useState('Dione');
+
+    const handleClose2 = (newValue) => {
+        setOpen2(false);
+
+        if (newValue) {
+            setValue(newValue);
+        }
+    };
+
+
+    const handleDelete = () => {
+        console.log("done");
+    };
+
+    const handleInvitation = () => {
+        setOpen2(true);
+
+    };
+
+    const columns = [
+        { id: 'eventName', label: 'Event Name', minWidth: 170 },
+        { id: 'capacity', label: 'Capacity', minWidth: 170 },
+        {
+            id: 'date',
+            label: 'Date',
+            minWidth: 170,
+            align: 'right',
+        },
+        {
+            id: 'time',
+            label: 'Time',
+            minWidth: 170,
+            align: 'right',
+        },
+        {
+            id: 'location',
+            label: 'Location',
+            minWidth: 170,
+            align: 'right',
+        },
+        {
+            id: 'duration',
+            label: 'Duration',
+            minWidth: 170,
+            align: 'right',
+        },
+        {
+            id: 'speaker',
+            label: 'Speaker',
+            minWidth: 170,
+            align: 'right',
+        },
+        {
+            id: 'topic',
+            label: 'Topic',
+            minWidth: 170,
+            align: 'right',
+        },
+        { id: 'invite', label: 'Invite Veterinarian', minWidth: 50 ,align: 'right',onClick : handleInvitation},
+        { id: 'editEvent', label: 'Edit Event', minWidth: 50 ,align: 'right'},
+        { id: 'deleteEvent', label: 'Delete Event', minWidth: 50 ,align: 'right',onClick : handleDelete},
+
+    ];
+
+    function createData(name, code, population, size) {
+        const density = population / size;
+        return { name, code, population, size, density };
+    }
+
+
+    const rows = [
+        createData('India', 'IN', 1324171354, 3287263),
+        createData('China', 'CN', 1403500365, 9596961),
+        createData('Italy', 'IT', 60483973, 301340),
+        createData('United States', 'US', 327167434, 9833520),
+        createData('Canada', 'CA', 37602103, 9984670),
+        createData('Australia', 'AU', 25475400, 7692024),
+        createData('Germany', 'DE', 83019200, 357578),
+        createData('Ireland', 'IE', 4857000, 70273),
+        createData('Mexico', 'MX', 126577691, 1972550),
+        createData('Japan', 'JP', 126317000, 377973),
+        createData('France', 'FR', 67022000, 640679),
+        createData('United Kingdom', 'GB', 67545757, 242495),
+        createData('Russia', 'RU', 146793744, 17098246),
+        createData('Nigeria', 'NG', 200962417, 923768),
+        createData('Brazil', 'BR', 210147125, 8515767),
+    ];
+
     let iconMap = {
         "editEvent" : <CreateIcon/>,
         "deleteEvent": <DeleteIcon/>,
         "invite":<SendIcon/>,
     }
-    function createIcon(key,onClick,eventName)
+    function createIcon(key,onClick)
     {
         return(
-            <IconButton onClick={() => onClick(eventName)}>
+            <IconButton onClick={onClick}>
                 {iconMap[key]}
             </IconButton>
         );
@@ -123,6 +160,16 @@ export default function EducationalTable() {
 
     return (
         <Paper className={classes.root}>
+            <AssignKeeperDialog
+                classes={{
+                    paper: classes2.paper,
+                }}
+                id="ringtone-menu"
+                keepMounted
+                open={open2}
+                onClose={handleClose2}
+                value={value}
+            />
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>
