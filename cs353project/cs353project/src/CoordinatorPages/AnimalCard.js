@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import AssignKeeperDialog from "./AssignKeeperDialog";
 
 const useStyles = makeStyles({
     root: {
@@ -15,8 +16,9 @@ const useStyles = makeStyles({
 });
 
 export default function AnimalCard(props) {
-    const classes = useStyles();
     const [modalShow, setModalShow] = React.useState(false);
+    const classes1 = useStyles();
+
 
     const handleInfoPage = () => {
 
@@ -25,7 +27,7 @@ export default function AnimalCard(props) {
     var imageURL = '/images/' + props.animal + '.jpg';
 
     return (
-        <Card className={classes.root}>
+        <Card className={classes1.root}>
             <CardActionArea>
                 <CardMedia
                     component="img"
@@ -34,7 +36,7 @@ export default function AnimalCard(props) {
                     image={imageURL}
                     title="Animal"
                 />
-                <CardContent>
+                <CardContent onClick={handleInfoPage}>
                     <Typography gutterBottom variant="h5" component="h2">
                         {(props.animal).toString().toUpperCase()}
                     </Typography>

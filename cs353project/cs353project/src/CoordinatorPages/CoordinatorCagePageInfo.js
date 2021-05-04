@@ -14,6 +14,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import {Grid} from "@material-ui/core";
 import AnimalCard from "./AnimalCard";
+import AssignKeeperDialog from "./AssignKeeperDialog";
+import CardActionArea from "@material-ui/core/CardActionArea";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -22,6 +24,18 @@ const useStyles = makeStyles((theme) => ({
     title: {
         marginLeft: theme.spacing(2),
         flex: 1,
+    },
+}));
+
+const useStyles2 = makeStyles((theme) => ({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+    },
+    paper: {
+        width: '80%',
+        maxHeight: 435,
     },
 }));
 
@@ -39,6 +53,22 @@ export default function CoordinatorCagePageInfo(props) {
 
     const handleClose = () => {
         setOpen(false);
+    };
+
+    const classes2 = useStyles2();
+    const [open2, setOpen2] = React.useState(false);
+    const [value, setValue] = React.useState('Dione');
+
+    const handleClickListItem = () => {
+        setOpen2(true);
+    };
+
+    const handleClose2 = (newValue) => {
+        setOpen2(false);
+
+        if (newValue) {
+            setValue(newValue);
+        }
     };
 
     const cages = [
@@ -63,9 +93,19 @@ export default function CoordinatorCagePageInfo(props) {
                         <Typography variant="h6" className={classes.title}>
                             {(props.cageName).toString().toUpperCase()} CAGE
                         </Typography>
-                        <Button autoFocus color="inherit" onClick={props.handleClose}>
+                        <Button autoFocus color="inherit" onClick={handleClickListItem}>
                             ASSIGN KEEPER
                         </Button>
+                        <AssignKeeperDialog
+                            classes={{
+                                paper: classes2.paper,
+                            }}
+                            id="ringtone-menu"
+                            keepMounted
+                            open={open2}
+                            onClose={handleClose2}
+                            value={value}
+                        />
                     </Toolbar>
                 </AppBar>
                 <div style = {{justifyContent: 'center'}}>
