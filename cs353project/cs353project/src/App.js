@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Link,Switch } from 'react-router-dom';
 import AnimalInformationPage from "./CoordinatorPages/AnimalInformationPage";
 import ComplaintDisplay from "./CoordinatorPages/ComplaintDisplay";
 import RefundRequestPage from "./CoordinatorPages/RefundRequestPage";
+import KeeperHomepage from "./KeeperPages/KeeperHomapage";
 
 
 function App() {
@@ -20,8 +21,7 @@ function App() {
               <Route path = "/coordinatoranimalinfo" component={AnimalInformationPage}></Route>
               <Route path = "/coordinatorcomplaints" exact component={ComplaintDisplay}></Route>
               <Route path = "/coordinatorrefundrequests" exact component={RefundRequestPage}></Route>
-
-
+              <Route path = "/keeperhomepage" exact component={KeeperHomepage}></Route>
           </Switch>
       </Router>
   );
