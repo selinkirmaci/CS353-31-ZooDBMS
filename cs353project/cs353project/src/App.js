@@ -8,6 +8,8 @@ import AnimalInformationPage from "./CoordinatorPages/AnimalInformationPage";
 import ComplaintDisplay from "./CoordinatorPages/ComplaintDisplay";
 import RefundRequestPage from "./CoordinatorPages/RefundRequestPage";
 import KeeperHomepage from "./KeeperPages/KeeperHomapage";
+import classtext from "./CoordinatorPages/classtext";
+import VeterinarianHomepage from "./VeterinarianPages/VeterinarianHomepage";
 
 
 function App() {
@@ -22,6 +24,8 @@ function App() {
               <Route path = "/coordinatorcomplaints" exact component={ComplaintDisplay}></Route>
               <Route path = "/coordinatorrefundrequests" exact component={RefundRequestPage}></Route>
               <Route path = "/keeperhomepage" exact component={KeeperHomepage}></Route>
+              <Route path = "/veterinarianhomepage" exact component={VeterinarianHomepage}></Route>
+
           </Switch>
       </Router>
   );
