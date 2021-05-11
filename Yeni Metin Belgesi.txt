@@ -1,4 +1,0 @@
-Htmp = 2*sin(omega/2).*(exp(1i*((pi/2)-(omega/2))));
-Htmp2 = 1-exp(-1i*omega);
-plot(omega,abs(Htmp2));
-axis([-2*pi, 2*pi, 0, 2]);
