@@ -12,12 +12,26 @@ import classtext from "./CoordinatorPages/classtext";
 import VeterinarianHomepage from "./VeterinarianPages/VeterinarianHomepage";
 import React, {useState} from "react";
 import Axios from 'axios';
+import Login from "./VisitorPages/Login";
+import SignUp from "./VisitorPages/SignUp";
+import RestaurantPage from "./RestaurantPage/RestaurantPage";
+import VisitorHomePage from "./VisitorPages/VisitorHomePage";
+import GiftShopPage from "./GiftShopPage/GiftShopPage";
+import VisitorUserProfile from "./VisitorPages/VisitorUserProfile";
+import VisitorMoney from "./VisitorPages/VisitorMoney";
 
-function test() {
+function App() {
   return (
       <Router>
           <Switch>
-              <Route path = "/" exact component={CoordinatorHomepage}></Route>
+              <Route path = "/" exact component={Login}></Route>
+              <Route path = "/login" exact component={Login}></Route>
+              <Route path = "/signup" exact component={SignUp}></Route>
+              <Route path = "/restaurant" exact component={RestaurantPage}></Route>
+              <Route path = "/visitorhomepage" exact component={VisitorHomePage}></Route>
+              <Route path = "/giftshop" exact component={GiftShopPage}></Route>
+              <Route path = "/visitorprofile" exact component={VisitorUserProfile}></Route>
+              <Route path = "/visitormoney" exact component={VisitorMoney}></Route>
               <Route path = "/coordinatorhomepage" exact component={CoordinatorHomepage}></Route>
               <Route path = "/coordinatorcagepage" exact component={CoordinatorCagePage}></Route>
               <Route path = "/coordinatorcagepageinfo" exact component={CoordinatorCagePageInfo}></Route>
@@ -31,7 +45,8 @@ function test() {
       </Router>
   );
 }
-function App()
+/*
+function test()
 {
     const [cageID,setcageID] = React.useState('');
     const [capacity,setCapacity] = React.useState('');
@@ -79,4 +94,6 @@ function App()
     );
 }
 
+
+ */
 export default App;
