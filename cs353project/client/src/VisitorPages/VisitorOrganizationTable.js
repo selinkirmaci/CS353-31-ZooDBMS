@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
 export default class  VisitorOrganizationTable extends Component
 {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             suggestions: null,
             visibleLeft: false,
@@ -94,7 +94,7 @@ export default class  VisitorOrganizationTable extends Component
                 <br/>
                 <Grid container spacing = {3}>
                     {
-                        this.state.postArray.map((post , index) =>
+                        this.props.list.map((post , index) =>
                             {
                                 return(
                                     <Grid item xs = {3}>

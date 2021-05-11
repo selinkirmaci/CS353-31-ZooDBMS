@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -27,6 +27,7 @@ import VisitorTourTable from "./VisitorTourTable";
 import VisitorOrganizationTable from "./VisitorOrganizationTable";
 // import VisitorEducationalTour from "./VisitorEducationalTour";
 import { LocalDiningOutlined } from '@material-ui/icons';
+import Axios from "axios";
 // import JoinTourModal from "./JoinTourModal";
 // import DonationModal from "./DonationModal";
 
@@ -78,11 +79,15 @@ const useStyles = makeStyles((theme) => ({
 function logout(){
 };
 
-function VisitorHomePage() {
+function VisitorHomePage(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [tourType] = React.useState(0);
     const [choseEventOpen, setChoseEventClose] = React.useState(0);
+    const [group,setGroup] = React.useState([]);
+    const [con,setCon] = React.useState([]);
+    const [userID,setUserID] = React.useState("");
+
 
 
     const theme = useTheme();
@@ -98,12 +103,24 @@ function VisitorHomePage() {
     const handleChoseEventClose = () => {
         setChoseEventClose(false);
     };
+    useEffect(()=>{
+        console.log("before");
+        console.log(props.location.data[0].userID);
+        console.log("after");
+        setUserID(props.location.data[0].userID)
+
+        const firstReq = Axios.get("http://localhost:3001/api/listGuideTour");
+        const secondReq =Axios.get("http://localhost:3001/api/listConservationOrganizations");
+
+        Axios.all([firstReq,secondReq]).then((response)=>{
+            setGroup(response[0].data);
+            setCon(response[1].data);
+        });
+    },[]);
 
     return(
         <div>
-            <VisitorSideBar title = "Visitor">
-            </VisitorSideBar>
-
+            <VisitorSideBar title = "Visitor"></VisitorSideBar>
             <div >
 
             <Link to="/login">
@@ -165,7 +182,7 @@ function VisitorHomePage() {
 
                         <TabPanel value={value} index={0} dir={theme.direction}>
                             {/* <h1>Group Tours</h1> */}
-                            <VisitorTourTable></VisitorTourTable>
+                            <VisitorTourTable userID = {userID} list={group}></VisitorTourTable>
                         </TabPanel>
                         {/* <TabPanel value={value} index={1} dir={theme.direction}>
                             <h1>Educational Programs</h1>
@@ -174,9 +191,8 @@ function VisitorHomePage() {
                         </TabPanel> */}
                         <TabPanel value={value} index={1} dir={theme.direction}>
                             {/* <h1>Conservational Organizations</h1> */}
-                            <VisitorOrganizationTable></VisitorOrganizationTable>
+                            <VisitorOrganizationTable list={con}></VisitorOrganizationTable>
                         </TabPanel>
-
                     </SwipeableViews>
                 </div>
 

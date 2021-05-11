@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default class  UserHomePage extends Component
 {
-
     constructor() {
         super();
         let postArray = [{title: "Event2",start:"Event2 start date",end:"Event end date",location:"event2 location",leftcap:"40",type:"cons"},
@@ -89,6 +88,7 @@ export default class  UserHomePage extends Component
 
         this.setState({ suggestions: results });
     }
+
 
     render() {
         return (

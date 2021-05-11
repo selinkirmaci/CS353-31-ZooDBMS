@@ -14,9 +14,18 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import IconButton from "@material-ui/core/IconButton";
 import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import Axios from "axios";
+
+
+const handleDelete = (eventID) => {
+    var e = 'http://localhost:3001/api/deleteGroupTour/' + eventID;
+    Axios.delete(e);
+    window.location.reload();
+};
 
 const columns = [
-    { id: 'eventName', label: 'Event Name', minWidth: 170 },
+    {id:'eventID'},
+    { id: 'name', label: 'Event Name', minWidth: 170 },
     { id: 'capacity', label: 'Capacity', minWidth: 170 },
     {
         id: 'date',
@@ -56,7 +65,7 @@ const columns = [
     },
 
     { id: 'editEvent', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-    { id: 'deleteEvent', label: 'Delete Event', minWidth: 50 ,align: 'right',},
+    { id: 'deleteEvent', label: 'Delete Event', minWidth: 50 ,align: 'right',onClick: handleDelete},
 
 ];
 
@@ -64,6 +73,8 @@ function createData(name, code, population, size) {
     const density = population / size;
     return { name, code, population, size, density };
 }
+
+
 
 const rows = [
     createData('India', 'IN', 1324171354, 3287263),
@@ -83,6 +94,8 @@ const rows = [
     createData('Brazil', 'BR', 210147125, 8515767),
 ];
 
+
+
 const useStyles = makeStyles({
     root: {
         width: '100%',
@@ -93,7 +106,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function TourTable() {
+export default function TourTable(props) {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -139,14 +152,14 @@ export default function TourTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {props.rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                     {columns.map((column) => {
                                         let value = row[column.id];
                                         if(column.id === "editEvent" || column.id === "deleteEvent" ||column.id === "barChart")
                                         {
-                                            value = createIcon(column.id,column.onClick,row.eventName);
+                                            value = createIcon(column.id,column.onClick,row.eventID);
                                         }
                                         return (
                                             <TableCell key={column.id} align={column.align}>

@@ -43,10 +43,13 @@ export default function ImgMediaCard(props) {
                 </Button>
                 <EventDetailModal
                     title = {props.title}
-                    start = {props.start}
-                    end = {props.end}
+                    time = {props.time}
+                    date = {props.date}
                     location = {props.location}
                     leftcap ={props.leftcap}
+                    duration ={props.duration}
+                    price = {props.price}
+                    userId = {props.userId}
                     show={modalShow}
                     leftModalButton={props.leftModalButton}
                     rightModalButton={props.rightModalButton}

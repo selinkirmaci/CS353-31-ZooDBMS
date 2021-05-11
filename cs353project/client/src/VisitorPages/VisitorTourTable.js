@@ -7,6 +7,7 @@ import {Sidebar} from "primereact/sidebar";
 import {AppBar,Toolbar,IconButton,Typography,InputBase,fade,makeStyles} from "@material-ui/core";
 import AppBarShort from "../AppBarShort";
 import EventCard from "../EventCard";
+import Axios from "axios";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -64,22 +65,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default class  VisitorTourTable extends Component
 {
-
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             suggestions: null,
             visibleLeft: false,
-            postArray: [
-                {title: "Event2",start:"Event2 start date",end:"Event end date",location:"event2 location",leftcap:"40"},
-                {title: "Event3",start:"Event3 start date",end:"Event end date",location:"event3 location",leftcap:"205"},
-                {title: "Event4",start:"Event4 start date",end:"Event end date",location:"event4 location",leftcap:"112"},
-                {title: "Event5",start:"Event5 start date",end:"Event end date",location:"event5 location",leftcap:"220"},
-                {title: "Event6",start:"Event6 start date",end:"Event end date",location:"event6 location",leftcap:"120"},
-            ]
+            postArray: [],
         };
         this.names = ['Audi', 'BMW', 'Fiat', 'Ford', 'Honda', 'Jaguar', 'Mercedes', 'Renault', 'Volvo'];
     }
+
     suggest(event) {
         let results = this.names.filter((names) => {
             return names.toLowerCase().startsWith(event.query.toLowerCase());
@@ -94,15 +89,18 @@ export default class  VisitorTourTable extends Component
                 <br/>
                 <Grid container spacing = {3}>
                     {
-                        this.state.postArray.map((post , index) =>
+                        this.props.list.map((post , index) =>
                             {
                                 return(
                                     <Grid item xs = {3}>
-                                        <EventCard  title = {post.title}
-                                                    start={ post.start}
-                                                    end={post.end}
+                                        <EventCard  title = {post.name}
+                                                    time ={ post.time}
+                                                    date={post.date}
                                                     location={post.location}
-                                                    leftcap={post.leftcap}
+                                                    leftcap={post.capacity}
+                                                    duration = {post.duration}
+                                                    price={post.price}
+                                                    userId = {this.props.userID}
                                                     leftModalButton="Accept"
                                                     rightModalButton="Decline"
                                                     down="Join Event"

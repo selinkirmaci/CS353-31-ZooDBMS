@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -25,7 +25,7 @@ import TourTable from "./TourTable";
 import EducationalTable from "./EducationalTable";
 import OrganizationTable from "./OrganizationTable";
 import ChoseEventTypeModal from "./ChoseEventTypeModal";
-
+import Axios from 'axios';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -77,6 +77,9 @@ function CoordinatorHomepage() {
     const [value, setValue] = React.useState(0);
     const [tourType] = React.useState(0);
     const [choseEventOpen, setChoseEventClose] = React.useState(0);
+    const [rows,setRows] = React.useState([]);
+    const [edurow,setEdurow] = React.useState([]);
+    const [conrow,setConrow] = React.useState([]);
 
 
     const theme = useTheme();
@@ -92,6 +95,19 @@ function CoordinatorHomepage() {
     const handleChoseEventClose = () => {
         setChoseEventClose(false);
     };
+
+    useEffect(()=>{
+        const firstReq = Axios.get("http://localhost:3001/api/listGuideTour");
+        const secondReq =Axios.get("http://localhost:3001/api/listEducationalPrograms");
+        const thirdReq =Axios.get("http://localhost:3001/api/listConservationOrganizations");
+
+        Axios.all([firstReq,secondReq,thirdReq]).then((response)=>{
+            setRows(response[0].data);
+            setEdurow(response[1].data);
+            setConrow(response[2].data);
+        });
+    },[]);
+
     return(
         <div>
             <CoordinatorSideBar title = "HomePage"></CoordinatorSideBar>
@@ -131,16 +147,16 @@ function CoordinatorHomepage() {
 
                         <TabPanel value={value} index={0} dir={theme.direction}>
                             <h1>Group Tours</h1>
-                            <TourTable></TourTable>
+                            <TourTable rows={rows}></TourTable>
                         </TabPanel>
                         <TabPanel value={value} index={1} dir={theme.direction}>
                             <h1>Educational Programs</h1>
-                            <EducationalTable></EducationalTable>
+                            <EducationalTable rows ={edurow}></EducationalTable>
 
                         </TabPanel>
                         <TabPanel value={value} index={2} dir={theme.direction}>
                             <h1>Conservational Organizations</h1>
-                            <OrganizationTable></OrganizationTable>
+                            <OrganizationTable rows={conrow}></OrganizationTable>
                         </TabPanel>
 
                     </SwipeableViews>

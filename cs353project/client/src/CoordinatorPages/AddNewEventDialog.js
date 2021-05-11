@@ -15,6 +15,7 @@ import Select from '@material-ui/core/Select';
 import HomeIcon from "@material-ui/icons/Home";
 import PetsIcon from "@material-ui/icons/Pets";
 import LocalAtmIcon from "@material-ui/icons/LocalAtm";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -35,7 +36,7 @@ export default function AddNewEventDialog(props) {
     const [disabled, setDisabled] = React.useState(false);
 
     var groupTourFields = [
-        {id:"eventName", label: "Event Name", type:"text"},
+        {id:"name", label: "Event Name", type:"text"},
         {id:"capacity", label: "Capacity",type:"text"},
         {id:"date", label: "Date", type:"text"},
         {id:"time", label: "Time", type:"text"},
@@ -46,7 +47,7 @@ export default function AddNewEventDialog(props) {
     ]
 
     var educationalProgramFields = [
-        {id:"eventName", label: "Event Name", type:"text"},
+        {id:"name", label: "Event Name", type:"text"},
         {id:"capacity", label: "Capacity",type:"text"},
         {id:"date", label: "Date", type:"text"},
         {id:"time", label: "Time", type:"text"},
@@ -57,7 +58,7 @@ export default function AddNewEventDialog(props) {
     ];
 
     var conservationalOrganizationFields = [
-        {id:"eventName", label: "Event Name", type:"text"},
+        {id:"name", label: "Event Name", type:"text"},
         {id:"capacity", label: "Capacity",type:"text"},
         {id:"date", label: "Date", type:"text"},
         {id:"time", label: "Time", type:"text"},
@@ -66,10 +67,102 @@ export default function AddNewEventDialog(props) {
         {id:"goalMoney", label: "Goal Money", type:"text"},
     ];
 
-    const handleChange = (event) => {
-        setAge(Number(event.target.value) || '');
+    const [name,setEventName] = React.useState("");
+    const [capacity,setCapacity] = React.useState("");
+    const [date,setDate] = React.useState("");
+    const [time,setTime] = React.useState("");
+    const [location,setLocation] = React.useState("");
+    const [duration,setDuration] = React.useState("");
+    const [price,setPrice] = React.useState("");
+    const [tourGuide,setTourGuide] = React.useState("");
+    const [speaker,setSpeaker] = React.useState("");
+    const [topic,setTopic] = React.useState("");
+    const [goal,setGoal] = React.useState("");
 
-    };
+
+
+    const handleInputChange = (event)=>
+    {
+        console.log(event.target.id);
+        if(event.target.id === "name")
+        {
+            setEventName(event.target.value);
+        }else if(event.target.id === "capacity")
+        {
+            setCapacity(event.target.value);
+        }else if(event.target.id === "date")
+        {
+            setDate(event.target.value);
+        }else if(event.target.id === "time")
+        {
+            setTime(event.target.value);
+        }else if(event.target.id === "location")
+        {
+            setLocation(event.target.value);
+        }else if(event.target.id === "duration")
+        {
+            setDuration(event.target.value);
+        }else if(event.target.id === "price")
+        {
+            setPrice(event.target.value);
+        }else if(event.target.id === "tourGuide")
+        {
+            setTourGuide(event.target.value);
+        }else if(event.target.id === "speaker")
+        {
+            setSpeaker(event.target.value);
+        }else if(event.target.id === "topic")
+        {
+            setTopic(event.target.value);
+        }else if(event.target.id === "goal")
+        {
+            setGoal(event.target.value);
+        }
+    }
+    const submit = () => {
+        if(props.tourType === 1) {
+            Axios.post("http://localhost:3001/api/addNewGroupTour", {
+                name: name,
+                capacity: capacity,
+                time: time,
+                date: date,
+                location: location,
+                duration: duration,
+                price: price,
+                tourGuide: tourGuide,
+            }).then(() => {
+                alert('success');
+            });
+        }else if(props.tourType === 2) {
+            Axios.post("http://localhost:3001/api/addNewEducationalProgram", {
+                name: name,
+                capacity: capacity,
+                time: time,
+                date: date,
+                location: location,
+                duration: duration,
+                speaker: speaker,
+                topic: topic,
+            }).then(() => {
+                alert('success');
+            });
+        }else if(props.tourType === 3) {
+            Axios.post("http://localhost:3001/api/addNewConservationalOrganization", {
+                name: name,
+                capacity: capacity,
+                time: time,
+                date: date,
+                location: location,
+                duration: duration,
+                goal: goal,
+            }).then(() => {
+                alert('success');
+            });
+        }
+        props.handleClose();
+        window.location.reload();
+
+    }
 
     function getTextFields (id,label,type)
     {
@@ -81,6 +174,7 @@ export default function AddNewEventDialog(props) {
                 label={label}
                 type={type}
                 fullWidth
+                onChange={handleInputChange}
             />
         );
     }
@@ -99,7 +193,7 @@ export default function AddNewEventDialog(props) {
 
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={props.handleClose} color="primary">
+                    <Button onClick={submit} color="primary">
                         Add Event
                     </Button>
                     <Button onClick={props.handleClose} color="primary">

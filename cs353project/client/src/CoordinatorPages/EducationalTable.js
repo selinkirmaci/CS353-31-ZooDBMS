@@ -15,6 +15,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import IconButton from "@material-ui/core/IconButton";
 import SendIcon from '@material-ui/icons/Send';
 import AssignKeeperDialog from "./AssignKeeperDialog";
+import Axios from 'axios';
 
 
 
@@ -38,7 +39,7 @@ const useStyles2 = makeStyles((theme) => ({
     },
 }));
 
-export default function EducationalTable() {
+export default function EducationalTable(props) {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -55,18 +56,20 @@ export default function EducationalTable() {
         }
     };
 
-
-    const handleDelete = () => {
-        console.log("done");
+    const handleDelete = (eventID) => {
+        var e = 'http://localhost:3001/api/deleteEducational/' + eventID;
+        Axios.delete(e);
     };
 
-    const handleInvitation = () => {
+    const handleInvitation = (eventID) => {
         setOpen2(true);
+        console.log(eventID);
 
     };
 
     const columns = [
-        { id: 'eventName', label: 'Event Name', minWidth: 170 },
+        {id:'eventID'},
+        { id: 'name', label: 'Event Name', minWidth: 170 },
         { id: 'capacity', label: 'Capacity', minWidth: 170 },
         {
             id: 'date',
@@ -139,13 +142,15 @@ export default function EducationalTable() {
         "deleteEvent": <DeleteIcon/>,
         "invite":<SendIcon/>,
     }
-    function createIcon(key,onClick)
+
+    function createIcon(key,onClick,name)
     {
         return(
-            <IconButton onClick={onClick}>
+            <IconButton onClick={() => onClick(name)}>
                 {iconMap[key]}
             </IconButton>
         );
+        console.log(name);
     }
 
 
@@ -186,14 +191,14 @@ export default function EducationalTable() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                        {props.rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
                             return (
                                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                                     {columns.map((column) => {
                                         let value = row[column.id];
                                         if(column.id === "editEvent" || column.id === "deleteEvent" || column.id === "invite" )
                                         {
-                                            value = createIcon(column.id,column.onClick,row.eventName);
+                                            value = createIcon(column.id,column.onClick,row.eventID);
                                         }
                                         return (
                                             <TableCell key={column.id} align={column.align}>

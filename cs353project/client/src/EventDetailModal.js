@@ -1,7 +1,18 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {Modal, Button, Row, Col, Form} from 'react-bootstrap';
+import Axios from 'axios';
 
 export default function EventDetailModal(props)  {
+
+    const submit = () => {
+        Axios.put("http://localhost:3001/api/updateUserMoney",{
+            userID: props.userId,
+            price: props.price,
+        });
+        props.onHide();
+
+    };
+
     return (
         <Modal
             {...props}
@@ -15,14 +26,19 @@ export default function EventDetailModal(props)  {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h5>Start & End Dates</h5>
-                {props.start} - {props.end}
+                <h5>Time</h5>
+                {props.time}
                 <h5 style={{marginTop:"2em"}}>Left Capacity</h5>
                 {props.leftcap}
+                <h5 style={{marginTop:"2em"}}>Duration</h5>
+                {props.duration}
+                <br/>
+                <h5 style={{marginTop:"2em"}}>Price</h5>
+                {props.price}
                 <br/>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>{props.leftModalButton}</Button>
+                <Button onClick={submit}>{props.leftModalButton}</Button>
                 <Button onClick={props.onHide}>{props.rightModalButton}</Button>
             </Modal.Footer>
         </Modal>

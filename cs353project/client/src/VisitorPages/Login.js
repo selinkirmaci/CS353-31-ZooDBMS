@@ -3,10 +3,39 @@ import {InputText} from "primereact/inputtext";
 import {Button} from "primereact/button";
 import React from "react";
 import {Link} from "react-router-dom";
+import Axios from "axios";
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function Login()
 {
     // taken from the site
+    const [username,setUsername] = React.useState("");
+    const [password,setPassword] = React.useState("");
+    const [userID,setUserID] = React.useState("");
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        submit();
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const submit = () => {
+        Axios.post("http://localhost:3001/api/login", {
+            username:username,
+            password:password,
+        }).then((response)=>{
+            console.log(response.data);
+            setUserID(response.data);
+            alert('success');
+        });
+    }
     const [state, setState] = React.useState({
         admin : false,
         visitor : false,
@@ -47,13 +76,13 @@ export default function Login()
                             <div className="p-field p-grid">
                                 <label  htmlFor="firstname4" className="p-col-12 p-md-2">Username</label>
                                 <div className="p-col-12 p-md-10">
-                                    <InputText style={{color: '#8C4FB7'}} id="firstname4" type="text"/>
+                                    <InputText style={{color: '#8C4FB7'}} id="firstname4" type="text"  onChange={(e)=>{setUsername(e.target.value);}}/>
                                 </div>
                             </div>
                             <div className="p-field p-grid">
                                 <label htmlFor="lastname4" className="p-col-12 p-md-2">Password</label>
                                 <div className="p-col-12 p-md-10">
-                                    <InputText type="password"  id="lastname4" />
+                                    <InputText type="password"  id="lastname4"  onChange={(e)=>{setPassword(e.target.value);}}/>
                                 </div>
                                 <FormControlLabel
                                     style={{marginTop : "2em"}}
@@ -82,16 +111,45 @@ export default function Login()
                                 {/* <text style={{marginLeft: '70%',textDecorationLine: 'underline'}}>Forgot password?</text> */}
                             </div>
                         </div>
-                        <Link to={link}>
+                        <Button style={{color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '30%',left: '41%'}} label="Try" className="p-button-rounded " onClick={handleClickOpen} />
+
+
                              <Button style={{color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '30%',left: '41%'}} label="Sign In" className="p-button-rounded " />
-                        </Link>
                         <div>
                             <br/>
                             <Link to="/signup">
                                  <li style={{listStyle: 'none',marginLeft: '35%', textDecorationLine: 'underline',color: '#8C4FB7'}}>Don't have an account yet?</li>
                             </Link>
                         </div>
-                    </Paper>
+                        <div>
+                            <Dialog
+                                open={open}
+                                onClose={handleClose}
+                                aria-labelledby="alert-dialog-title"
+                                aria-describedby="alert-dialog-description"
+                            >
+                                <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
+                                <DialogContent>
+                                    <DialogContentText id="alert-dialog-description">
+                                        Let Google help apps determine location. This means sending anonymous location data to
+                                        Google, even when no apps are running.
+                                    </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose} color="primary">
+                                        Disagree
+                                    </Button>
+                                    <Link to={{
+                                        pathname: link,
+                                        data: [{userID:userID}],
+                                    }}>
+                                    <Button color="primary" autoFocus>
+                                        Agree
+                                    </Button>
+                                    </Link>
+                                </DialogActions>
+                            </Dialog>
+                        </div>                    </Paper>
                 </Paper>
             </div>
         </div>
