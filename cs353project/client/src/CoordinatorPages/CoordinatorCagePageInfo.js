@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,6 +16,7 @@ import {Grid} from "@material-ui/core";
 import AnimalCard from "./AnimalCard";
 import AssignKeeperDialog from "./AssignKeeperDialog";
 import CardActionArea from "@material-ui/core/CardActionArea";
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -46,6 +47,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function CoordinatorCagePageInfo(props) {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [cages,setCages]= React.useState([]);
+    const [keepers,setKeepers]= React.useState([]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -70,17 +73,28 @@ export default function CoordinatorCagePageInfo(props) {
             setValue(newValue);
         }
     };
+    /*
 
-    const cages = [
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
+    useEffect(()=>{
+        Axios.post("http://localhost:3001/api/getAnimalsOfCage", {
+            cageID:props.cageID,
+        }).then((response)=>{
+            setCages(response.data);
+        });
+    });
 
-    ];
+     */
+    useEffect(()=>{
+        const firstReq = Axios.post("http://localhost:3001/api/getAnimalsOfCage", {
+            cageID:props.cageID,
+        });
+        const secondReq =Axios.get("http://localhost:3001/api/getKeepers");
+
+        Axios.all([firstReq,secondReq]).then((response)=>{
+            setCages(response[0].data);
+            setKeepers(response[1].data);
+        });
+    },[]);
 
     return (
         <div>
@@ -105,6 +119,8 @@ export default function CoordinatorCagePageInfo(props) {
                             open={open2}
                             onClose={handleClose2}
                             value={value}
+                            options = {keepers}
+                            cageID = {props.cageID}
                         />
                     </Toolbar>
                 </AppBar>
@@ -116,7 +132,7 @@ export default function CoordinatorCagePageInfo(props) {
                                 {
                                     return (
                                         <Grid item xs={2}>
-                                            <AnimalCard animal={event.animalName}
+                                            <AnimalCard animal={event.name}
                                             />
                                         </Grid>
                                     )

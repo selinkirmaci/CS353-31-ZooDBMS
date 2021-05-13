@@ -65,28 +65,18 @@ export default function TreatmentRequestCard(props) {
             <CardActionArea>
                 <CardContent onClick={handleInfoPage}>
                     <Typography gutterBottom variant="h5" component="h2">
-                        Title
+                        Treatment For {props.animal}
                     </Typography>
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary" onClick={handleTreatment}>
+                <Button size="small" color="primary" onClick={handleScheduleOpen}>
                     Schedule
                 </Button>
-                <Button size="small" color="primary" onClick={handleScheduleOpen}>
+                <Button size="small" color="primary" onClick={handleTreatment}>
                     Reject
                 </Button>
             </CardActions>
-            <VeterinarianListDialog
-                classes={{
-                    paper: classes2.paper,
-                }}
-                id="ringtone-menu"
-                keepMounted
-                open={open}
-                onClose={handleTreatmentClose}
-                value={value}
-            />
             <ScheduleTrainingDialog open = {open2} handleClose={handleScheduleClose}>
             </ScheduleTrainingDialog>
         </Card>

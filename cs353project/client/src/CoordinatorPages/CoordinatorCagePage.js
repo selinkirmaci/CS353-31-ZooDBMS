@@ -21,6 +21,20 @@ function CoordinatorCagePage() {
             setCages(response.data);
         });
     });
+
+/*
+    useEffect(()=>{
+        const firstReq = Axios.get("http://localhost:3001/api/listGuideTour");
+        const secondReq =Axios.get("http://localhost:3001/api/listEducationalPrograms");
+
+        Axios.all([firstReq,secondReq,thirdReq]).then((response)=>{
+            setCages(response[0].data);
+            setEdurow(response[1].data);
+        });
+    },[]);
+
+ */
+
 /*
     const cages = [
         { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
@@ -49,7 +63,8 @@ function CoordinatorCagePage() {
                             {
                                     return (
                                         <Grid item xs={2}>
-                                            <CageCard animal={event.animalType}
+                                            <CageCard cageID = {event.cageID}
+                                                      animal={event.animalType}
                                             />
                                         </Grid>
                                     )

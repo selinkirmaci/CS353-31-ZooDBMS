@@ -46,11 +46,11 @@ export default function KeeperCageCard(props) {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {(props.animal).toString().toUpperCase()} CAGE
+                        {props.animal} CAGE
                     </Typography>
 
                 </CardContent>
-                <KeeperCageInfoPage open = {open} handleClose = {handleClose} cageName = {props.animal}></KeeperCageInfoPage>
+                <KeeperCageInfoPage keeperID = {props.keeperID} animalName = {props.animalName} cageID = {props.cageID} open = {open} handleClose = {handleClose} cageName = {props.animal}></KeeperCageInfoPage>
             </CardActionArea>
             <CardActions>
                 <Button size="small" color="primary" onClick={handleInfoPage}>

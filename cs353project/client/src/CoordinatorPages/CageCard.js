@@ -48,7 +48,10 @@ export default function CageCard(props) {
                     <Typography gutterBottom variant="h5" component="h2">
                         {(props.animal).toString().toUpperCase()} CAGE
                     </Typography>
-                    <CoordinatorCagePageInfo open = {open} handleClose = {handleClose} cageName = {props.animal}></CoordinatorCagePageInfo>
+                    <Typography gutterBottom variant="h5" component="h2">
+                        {(props.cageID)} ID
+                    </Typography>
+                    <CoordinatorCagePageInfo cageID = {props.cageID} open = {open} handleClose = {handleClose} cageName = {props.animal}></CoordinatorCagePageInfo>
 
                 </CardContent>
             </CardActionArea>

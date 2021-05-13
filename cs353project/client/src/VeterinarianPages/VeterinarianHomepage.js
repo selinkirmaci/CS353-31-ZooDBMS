@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import makeStyles from "@material-ui/core/styles/makeStyles";
@@ -21,6 +21,7 @@ import PlusIcon from  "@material-ui/icons/Add";
 import VeterinarianSidebar from "./VeterinarianSidebar";
 import EducationalCardDisplay from "./EducationalCardDisplay";
 import TreatmentCardDisplay from "./TreatmentCardDisplay";
+import Axios from "axios";
 
 
 function TabPanel(props) {
@@ -68,11 +69,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function VeterinarianHomepage() {
+function VeterinarianHomepage(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
     const [tourType] = React.useState(0);
     const [choseEventOpen, setChoseEventClose] = React.useState(0);
+    const [vetID, setVetID] = React.useState("");
+    const [treatments, setTreatments] = React.useState([]);
+    const [invitations, setInvitations] = React.useState([]);
 
 
     const theme = useTheme();
@@ -88,6 +92,37 @@ function VeterinarianHomepage() {
     const handleChoseEventClose = () => {
         setChoseEventClose(false);
     };
+    /*
+    useEffect(()=>{
+
+        setVetID(props.location.data[0].userID);
+
+        Axios.post("http://localhost:3001/api/listTreatmentRequests", {
+            vetID:vetID,
+        }).then((response)=>{
+            setTreatments(response.data);
+        });
+
+    });
+
+     */
+    useEffect(()=>{
+
+        setVetID(props.location.data[0].userID);
+
+        const firstReq = Axios.post("http://localhost:3001/api/listTreatmentRequests", {
+            vetID:vetID,
+        });
+        const secondReq = Axios.post("http://localhost:3001/api/listEducationalInvitations", {
+            vetID:vetID,
+        });
+
+        Axios.all([firstReq,secondReq]).then((response)=>{
+            setTreatments(response[0].data);
+            setInvitations(response[1].data);
+        });
+    },[]);
+
     return(
         <div>
             <VeterinarianSidebar title = "HomePage"></VeterinarianSidebar>
@@ -113,12 +148,12 @@ function VeterinarianHomepage() {
 
                     <TabPanel value={value} index={0} dir={theme.direction}>
                         <h1>Educational Program Invitations</h1>
-                        <EducationalCardDisplay></EducationalCardDisplay>
+                        <EducationalCardDisplay invitations = {invitations}></EducationalCardDisplay>
 
                     </TabPanel>
                     <TabPanel value={value} index={1} dir={theme.direction}>
                         <h1>Treatment Requests</h1>
-                        <TreatmentCardDisplay></TreatmentCardDisplay>
+                        <TreatmentCardDisplay requests = {treatments}></TreatmentCardDisplay>
 
                     </TabPanel>
 

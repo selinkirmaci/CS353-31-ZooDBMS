@@ -101,6 +101,7 @@ export default class  VisitorTourTable extends Component
                                                     duration = {post.duration}
                                                     price={post.price}
                                                     userId = {this.props.userID}
+                                                    eventID = {post.eventID}
                                                     leftModalButton="Accept"
                                                     rightModalButton="Decline"
                                                     down="Join Event"

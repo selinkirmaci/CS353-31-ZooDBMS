@@ -26,7 +26,7 @@ const useStyles2 = makeStyles((theme) => ({
     },
 }));
 
-export default function KeeperAnimalCard(props) {
+export default function EducationalRequestCard(props) {
     const [modalShow, setModalShow] = React.useState(false);
     const classes1 = useStyles();
     const classes2 = useStyles2();
@@ -42,7 +42,7 @@ export default function KeeperAnimalCard(props) {
             <CardActionArea>
                 <CardContent onClick={handleAccept}>
                     <Typography gutterBottom variant="h5" component="h2">
-                        Title
+                        Invitation for {props.eventName}
                     </Typography>
                 </CardContent>
             </CardActionArea>

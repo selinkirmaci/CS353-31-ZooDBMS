@@ -12,6 +12,7 @@ import Dialog from '@material-ui/core/Dialog';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Radio from '@material-ui/core/Radio';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Axios from "axios";
 
 const options = [
     'None',
@@ -52,6 +53,13 @@ export default function VeterinarianListDialog(props) {
     };
 
     const handleOk = () => {
+        Axios.post("http://localhost:3001/api/assignVeterinarian", {
+            vetID: value,
+            animalID: props.animalID,
+        }).then((response)=>{
+            console.log(response.data);
+            alert('success');
+        });
         onClose(value);
     };
 
@@ -69,7 +77,7 @@ export default function VeterinarianListDialog(props) {
             open={open}
             {...other}
         >
-            <DialogTitle id="confirmation-dialog-title">Keepers</DialogTitle>
+            <DialogTitle id="confirmation-dialog-title">VETERINARIANS</DialogTitle>
             <DialogContent dividers>
                 <RadioGroup
                     ref={radioGroupRef}
@@ -78,8 +86,8 @@ export default function VeterinarianListDialog(props) {
                     value={value}
                     onChange={handleChange}
                 >
-                    {options.map((option) => (
-                        <FormControlLabel value={option} key={option} control={<Radio />} label={option} />
+                    {props.options.map((option) => (
+                        <FormControlLabel value={option.userID} key={option.userID} control={<Radio />} label={option.name} />
                     ))}
                 </RadioGroup>
             </DialogContent>

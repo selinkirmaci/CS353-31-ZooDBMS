@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -17,6 +17,8 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import KeeperAnimalCard from "./KeeperAnimalCard";
 import AssignKeeperDialog from "../CoordinatorPages/AssignKeeperDialog";
 import VeterinarianListDialog from "./VeterinarianListDialog";
+import Axios from "axios";
+import KeeperCageCard from "./KeeperCageCard";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -59,6 +61,7 @@ export default function CoordinatorCagePageInfo(props) {
     const classes2 = useStyles2();
     const [open2, setOpen2] = React.useState(false);
     const [value, setValue] = React.useState('Dione');
+    const [cages,setCages] = React.useState([]);
 
     const handleClickListItem = () => {
         setOpen2(true);
@@ -71,17 +74,15 @@ export default function CoordinatorCagePageInfo(props) {
             setValue(newValue);
         }
     };
+    useEffect(()=>{
+        Axios.post("http://localhost:3001/api/getAnimalsOfCage", {
+            cageID:props.cageID,
+        }).then((response)=>{
+            setCages(response.data);
+        });
+    },[]);
 
-    const cages = [
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
 
-    ];
 
     return (
         <div>
@@ -92,7 +93,7 @@ export default function CoordinatorCagePageInfo(props) {
                             <CloseIcon />
                         </IconButton>
                         <Typography variant="h6" className={classes.title}>
-                            {(props.cageName).toString().toUpperCase()} CAGE
+                            {props.cageName} CAGE
                         </Typography>
                         <Button autoFocus color="inherit" onClick={handleClickListItem}>
                             Regularize Food
@@ -107,7 +108,7 @@ export default function CoordinatorCagePageInfo(props) {
                                 {
                                     return (
                                         <Grid item xs={2}>
-                                            <KeeperAnimalCard animal={event.animalName}
+                                            <KeeperAnimalCard animalID = {event.animalID} keeperID = {props.keeperID} animalType={event.species} animal={event.name}
                                             />
                                         </Grid>
                                     )

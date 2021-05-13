@@ -30,6 +30,8 @@ import { LocalDiningOutlined } from '@material-ui/icons';
 import Axios from "axios";
 // import JoinTourModal from "./JoinTourModal";
 // import DonationModal from "./DonationModal";
+import fs from 'fs';
+
 
 
 function TabPanel(props) {
@@ -107,7 +109,8 @@ function VisitorHomePage(props) {
         console.log("before");
         console.log(props.location.data[0].userID);
         console.log("after");
-        setUserID(props.location.data[0].userID)
+        setUserID(props.location.data[0].userID);
+
 
         const firstReq = Axios.get("http://localhost:3001/api/listGuideTour");
         const secondReq =Axios.get("http://localhost:3001/api/listConservationOrganizations");

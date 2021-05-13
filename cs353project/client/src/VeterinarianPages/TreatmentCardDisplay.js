@@ -88,11 +88,11 @@ export default function TreatmentCardDisplay(props) {
                 <br/>
                 <Grid style = {{justifyContent: 'center'}} container spacing = {10}>
                     {
-                        cages.map((event , index) =>
+                        props.requests.map((event , index) =>
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <TreatmentRequestCard/>
+                                        <TreatmentRequestCard animal = {event.name}/>
                                     </Grid>
                                 )
                             }

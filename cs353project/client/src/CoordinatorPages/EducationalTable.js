@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -16,7 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SendIcon from '@material-ui/icons/Send';
 import AssignKeeperDialog from "./AssignKeeperDialog";
 import Axios from 'axios';
-
+import InviteVeterinarianDialogCoordinator from "./InviteVeterinarianDialogCoordinator";
 
 
 const useStyles = makeStyles({
@@ -47,6 +47,8 @@ export default function EducationalTable(props) {
     const classes2 = useStyles2();
     const [open2, setOpen2] = React.useState(false);
     const [value, setValue] = React.useState('Dione');
+    const [eID,setEID] =  React.useState(0);
+    const [veterinarians,setVeterinarians] = React.useState([]);
 
     const handleClose2 = (newValue) => {
         setOpen2(false);
@@ -62,10 +64,17 @@ export default function EducationalTable(props) {
     };
 
     const handleInvitation = (eventID) => {
+        setEID(eventID);
         setOpen2(true);
-        console.log(eventID);
-
     };
+
+    useEffect(()=>{
+        Axios.get("http://localhost:3001/api/getVeterinarians", {
+        }).then((response)=>{
+            setVeterinarians(response.data);
+        });
+    });
+
 
     const columns = [
         {id:'eventID'},
@@ -165,7 +174,7 @@ export default function EducationalTable(props) {
 
     return (
         <Paper className={classes.root}>
-            <AssignKeeperDialog
+            <InviteVeterinarianDialogCoordinator
                 classes={{
                     paper: classes2.paper,
                 }}
@@ -174,6 +183,8 @@ export default function EducationalTable(props) {
                 open={open2}
                 onClose={handleClose2}
                 value={value}
+                eventID = {eID}
+                options = {veterinarians}
             />
             <TableContainer className={classes.container}>
                 <Table stickyHeader aria-label="sticky table">

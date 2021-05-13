@@ -9,6 +9,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import fs from 'fs';
 
 export default function Login()
 {
@@ -49,6 +50,12 @@ export default function Login()
         
         if( event.target.name == "visitor"){
             setState({ link : "/visitorhomepage"});
+        }else if( event.target.name == "keeper"){
+            setState({ link : "/keeperhomepage"});
+        }else if( event.target.name == "veterinarian"){
+            setState({ link : "/veterinarianhomepage"});
+        }else if( event.target.name == "coordinator"){
+            setState({ link : "/coordinatorhomepage"});
         }
     };
 
@@ -56,13 +63,13 @@ export default function Login()
 
     return (
         <div class = "row no-gutters" >
-            <div class = "col no-gutters" style={{ height : '100vh', width : '80%' ,backgroundColor: 'white'}}>
-                <Paper style={{backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , height : '100vh', width : '80%' }}></Paper>
+            <div class = "col no-gutters" style={{ height : '100vh', width : '50%' ,backgroundColor: 'white'}}>
+                <Paper style={{backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , height : '100vh', width : '50%' }}></Paper>
             </div>
-            <div className="col no-gutters"  style={{ height : '100vh', width : '120%' }}>
+            <div className="col no-gutters"  style={{ height : '100vh', width : '100%' }}>
                 <Paper elevation={0} style={{ height : '100vh', width : '100%' }}>
                     <Paper elevation={0} style={{
-                        position: 'absolute', left: '30%', top: '50%',
+                        position: 'absolute', left: '60%', top: '50%',
                         transform: 'translate(-50%, -50%)',
                         width: '70%',
                         minHeight: '50%',
@@ -86,8 +93,8 @@ export default function Login()
                                 </div>
                                 <FormControlLabel
                                     style={{marginTop : "2em"}}
-                                    control={<Checkbox checked={admin} onChange={handleChange} name="admin" />}
-                                    label="Is Admin"
+                                    control={<Checkbox checked={admin} onChange={handleChange} name="coordinator" />}
+                                    label="Is Coordinator"
                                     labelPlacement="left"
                                 />
                                 <FormControlLabel

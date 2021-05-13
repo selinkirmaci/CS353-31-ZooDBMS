@@ -5,9 +5,20 @@ import Axios from 'axios';
 export default function EventDetailModal(props)  {
 
     const submit = () => {
+        /*
         Axios.put("http://localhost:3001/api/updateUserMoney",{
             userID: props.userId,
             price: props.price,
+        });
+
+         */
+        Axios.post("http://localhost:3001/api/registerToEvent",{
+            userID: props.userId,
+            eventID: props.eventID,
+        }).then((response)=>{
+            console.log(response.data);
+            //setUserID(response.data);
+            alert('success');
         });
         props.onHide();
 

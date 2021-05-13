@@ -53,12 +53,10 @@ export default function AssignKeeperDialog(props) {
     };
 
     const handleOk = () => {
-        Axios.post("http://localhost:3001/api/assignKeeper", {
-            keeperID: value,
-            cageID: props.cageID,
+        Axios.post("http://localhost:3001/api/inviteVeterinarian", {
+            vetID:value,
+            eventID:props.eventID,
         }).then((response)=>{
-            console.log(response.data);
-            alert('success');
         });
         onClose(value);
     };

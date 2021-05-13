@@ -1,33 +1,34 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Grid, Paper} from "@material-ui/core";
 import Checkbox from '@material-ui/core/Checkbox';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 import KeeperCageCard from "./KeeperCageCard";
 import KeeperSideBar from "./KeeperSideBar";
+import Axios from "axios";
 
 
 
-function KeeperHomepage() {
+function KeeperHomepage(props) {
     const [checked, setChecked] = React.useState(false);
+    const [keeperID, setKeeperID] = React.useState("");
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
     };
-    const cages = [
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bear', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'giraffe', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'lion', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'panda', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'snake', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bear', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'giraffe', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'lion', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'panda', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'snake', label: 'Edit Event', minWidth: 50 ,align: 'right'}
-    ];
+    const [cages,setCages] = React.useState([]);
+
+    useEffect(()=>{
+
+        setKeeperID(props.location.data[0].userID);
+
+        Axios.post("http://localhost:3001/api/getAssignedCages", {
+            keeperID:keeperID,
+        }).then((response)=>{
+            setCages(response.data);
+        });
+    });
+
     const cages2 = [
         { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
         { animalName: 'bear', label: 'Edit Event', minWidth: 50 ,align: 'right'},
@@ -71,7 +72,7 @@ function KeeperHomepage() {
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <KeeperCageCard animal={event.animalName}
+                                        <KeeperCageCard keeperID = {keeperID} cageID = {event.cageID} animalName = {event.name} animal={event.animalType}
                                         />
                                     </Grid>
                                 )

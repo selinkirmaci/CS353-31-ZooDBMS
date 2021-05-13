@@ -32,9 +32,8 @@ export default function ImgMediaCard(props) {
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {props.title}
+                        {props.title} {props.eventID}
                     </Typography>
-
                 </CardContent>
             </CardActionArea>
             <CardActions>
@@ -50,6 +49,7 @@ export default function ImgMediaCard(props) {
                     duration ={props.duration}
                     price = {props.price}
                     userId = {props.userId}
+                    eventID = {props.eventID}
                     show={modalShow}
                     leftModalButton={props.leftModalButton}
                     rightModalButton={props.rightModalButton}

@@ -87,11 +87,11 @@ export default function EducationalCardDisplay(props) {
                 <br/>
                 <Grid style = {{justifyContent: 'center'}} container spacing = {10}>
                     {
-                        cages.map((event , index) =>
+                        props.invitations.map((event , index) =>
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <EducationalRequestCard animal={event.animalName}
+                                        <EducationalRequestCard eventName={event.name}
                                         />
                                     </Grid>
                                 )

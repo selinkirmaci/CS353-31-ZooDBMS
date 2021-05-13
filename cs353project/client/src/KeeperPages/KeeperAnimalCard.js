@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import VeterinarianListDialog from "./VeterinarianListDialog";
 import ScheduleTrainingDialog from "./ScheduleTrainingDialog";
+import Axios from "axios";
 
 const useStyles = makeStyles({
     root: {
@@ -37,6 +38,7 @@ export default function KeeperAnimalCard(props) {
 
     const [open, setOpen] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
+    const [veterinarians, setVeterinarians] = React.useState([]);
 
 
     const handleInfoPage = () => {
@@ -44,6 +46,10 @@ export default function KeeperAnimalCard(props) {
         window.location.href="/coordinatoranimalinfo?"+a;
     };
     const handleTreatment = () => {
+        Axios.get("http://localhost:3001/api/getVeterinarians", {
+        }).then((response)=>{
+            setVeterinarians(response.data);
+        });
         setOpen(true);
     };
 
@@ -61,7 +67,7 @@ export default function KeeperAnimalCard(props) {
 
 
 
-    var imageURL = '/images/' + props.animal + '.jpg';
+    var imageURL = '/images/' + props.animalType + '.jpg';
 
     return (
         <Card className={classes1.root}>
@@ -75,7 +81,7 @@ export default function KeeperAnimalCard(props) {
                 />
                 <CardContent onClick={handleInfoPage}>
                     <Typography gutterBottom variant="h5" component="h2">
-                        {(props.animal).toString().toUpperCase()}
+                        {props.animal}
                     </Typography>
                 </CardContent>
             </CardActionArea>
@@ -96,6 +102,8 @@ export default function KeeperAnimalCard(props) {
                 open={open}
                 onClose={handleTreatmentClose}
                 value={value}
+                options = {veterinarians}
+                animalID = {props.animalID}
             />
             <ScheduleTrainingDialog open = {open2} handleClose={handleScheduleClose}>
             </ScheduleTrainingDialog>
