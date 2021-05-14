@@ -95,16 +95,13 @@ export default function CoordinatorSideBar(props) {
         setOpen(false);
     };
     const handleClick = (index) => {
-        /*
+
         if(index === 0)
-            window.location.href="/coordinatorhomepage";
+            window.location.href="/keeperhomepage";
         else if(index === 1)
-            window.location.href="/coordinatorcagepage";
-        else if(index === 2)
-            window.location.href="/coordinatorrefundrequests";
-        else
-            window.location.href="/coordinatorcomplaints";
-         */
+            window.location.href="/displayTrainings";
+
+
     };
 
     return (

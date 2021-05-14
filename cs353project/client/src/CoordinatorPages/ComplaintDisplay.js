@@ -1,6 +1,6 @@
 import CageCard from "./CageCard";
 import CoordinatorSideBar from "./CoordinatorSideBar";
-import React from "react";
+import React, {useEffect} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 
 import {Grid, Paper} from "@material-ui/core";
@@ -15,6 +15,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import RespondComplaintDialog from "./RespondComplaintDialog";
+import Axios from "axios";
 
 
 const useStyles = makeStyles({
@@ -31,22 +32,18 @@ function ComplaintDisplay() {
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
+    const [forms,setForms] = React.useState([]);
+    const [writer,setWriter] = React.useState("");
+    const [formID,setFormID] = React.useState("");
 
 
-    const cages = [
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bear', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'giraffe', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'lion', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'panda', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'snake', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bird', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'bear', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'giraffe', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'lion', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'panda', label: 'Edit Event', minWidth: 50 ,align: 'right'},
-        { animalName: 'snake', label: 'Edit Event', minWidth: 50 ,align: 'right'}
-    ];
+    useEffect(()=>{
+        const firstReq =   Axios.get("http://localhost:3001/api/getComplaints");
+
+        Axios.all([firstReq]).then((response)=>{
+            setForms(response[0].data);
+        },[]);
+    });
 
     const handleRespondClick = () => {
         setOpen(true);
@@ -58,13 +55,13 @@ function ComplaintDisplay() {
 
     return(
         <div>
-            <CoordinatorSideBar title = "Cage Page"></CoordinatorSideBar>
-            <RespondComplaintDialog open = {open} onClose={ handleRespondClose }></RespondComplaintDialog>
+            <CoordinatorSideBar title = "Display Complaint Forms"></CoordinatorSideBar>
+            <RespondComplaintDialog formID = {formID} writer = {writer} open = {open} onClose={ handleRespondClose }></RespondComplaintDialog>
             <div style = {{justifyContent: 'center'}}>
                 <br/>
                 <Grid style = {{justifyContent: 'center'}} container spacing = {10}>
                     {
-                        cages.map((event , index) =>
+                        forms.map((event , index) =>
                             {
                                 return (
                                     <Grid item xs={2}>
@@ -72,15 +69,19 @@ function ComplaintDisplay() {
                                             <CardActionArea>
                                                 <CardContent>
                                                     <Typography gutterBottom variant="h5" component="h2">
-                                                        Complaint title
+                                                        Complaint Topic: {event.subject}
                                                     </Typography>
                                                     <Typography variant="body2" color="textSecondary" component="p">
-                                                        Complaint Paragraf
+                                                        Complaint Paragraf: {event.message}
                                                     </Typography>
                                                 </CardContent>
                                             </CardActionArea>
                                             <CardActions>
-                                                <Button size="small" color="primary" onClick={handleRespondClick}>
+                                                <Button size="small" color="primary" onClick={()=>{
+                                                    setWriter(event.name);
+                                                    setFormID(event.formID);
+                                                    setOpen(true);
+                                                }}>
                                                     Respond
                                                 </Button>
                                                 <Button size="small" color="primary">

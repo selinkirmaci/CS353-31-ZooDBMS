@@ -4,70 +4,77 @@ import {Card} from "@material-ui/core";
 import {InputText} from "primereact/inputtext";
 import React from "react";
 import {Link} from "react-router-dom";
+import VisitorSideBar from "./VisitorSideBar";
+import Grid from "@material-ui/core/Grid";
+import CardContent from "@material-ui/core/CardContent";
+import TextField from "@material-ui/core/TextField";
+import CardActions from "@material-ui/core/CardActions";
+import Axios from "axios";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: 'center',
+        color: theme.palette.text.secondary,
+    },
+    card: {
+    }
+}));
 
 export default function VisitorMoney()
 {
-    // taken from the site
-    const [state, setState] = React.useState({
-        username : '',
-        password : '',
-        birthYear : 0,
-    });
-    
-    const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-    };
+    const classes = useStyles();
 
-    const { username, password, birthYear } = state;
+    const [money,setMoney] = React.useState("");
+    const [cardowner,setCardowner]= React.useState("");
+    const [cvc,setCVC] = React.useState("");
+    const [expriation,setExpriation]= React.useState("");
+
+    const submit = () => {
+        Axios.put("http://localhost:3001/api/uploadMoney", {
+            userID:localStorage.getItem('userID'),
+            price:money,
+        });
+        alert('success');
+        window.location.href="/visitorhomepage";
+    }
+    const cancel = () => {
+            window.location.href="/visitorhomepage";
+    }
 
 
-    const header =<span>
-            <br/>
-            <text class = "text"  style = {{left: '50%',margin: '15em'}} >WELCOME</text>
-            </span>;
-    const footer = <span>
-                <Button label="Sign Up"  style={{marginLeft: '16em',marginRight: '.4em',color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '25%'}}/>
-                <Link to={"/login"}>
-                        <Button style={{ color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '25%'}} label="Cancel" className="p-button-secondary " />
-                </Link>
-                </span>;
     return(
-        <div style={{height : '130vh', width : '100%',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)'}}>
-            <Paper style={{backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)'}}>
-                <Card class="rounded-card"  header={header} footer={footer} style={{
-                    position: 'absolute', left: '50%', top: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: '40%',
-                    minHeight: '60%',
-                    justifyContent: "center",
-                    borderRadius: '20px'
-                }}>
-                    <div style = {{marginTop : '10em'}} className="p-fluid">
-                        <br/>
-                        <div className="p-fluid p-formgrid p-grid">
-                            <div className="p-field p-col-12 p-md-6">
-                                <label htmlFor="firstname6">Amount of Money</label>
-                                <InputText id="firstname6" type="text" />
-                            </div>
-                            <div className="p-field p-col-12 p-md-6">
-                                <label htmlFor="lastname6">CVC</label>
-                                <InputText id="lastname6" type="text" />
-                            </div>
-                        </div>
-                        <div className="p-field p-grid">
-                            <Link to="/visitorhomepage">
-                                <Button variant = "contained" color = "primary">Agree</Button>
-                            </Link>
-                        </div>
-                        <div className="p-field p-grid">
-                            <Link to="/visitorhomepage">
-                                <Button variant = "contained" color = "primary">Cancel</Button>
-                            </Link>
-                        </div>
-                    </div>
-
-                </Card>
-            </Paper>
+        <div className={classes.root}>
+            <Grid container spacing={3}>
+                <Grid item xs={12} >
+                    <Card className={classes.card}>
+                        <CardContent align='center'>
+                            <h1 align='center'>Upload Money</h1>
+                            <br/>
+                            <TextField fullWidth align='center'  id="name" label="Amount of Money" variant="outlined" onChange={(e)=>{setMoney(e.target.value);}} />
+                            <br/>
+                            <br/>
+                            <TextField fullWidth align='center'  id="subject" label="Card Owner" variant="outlined" onChange={(e)=>{setCardowner(e.target.value);}} />
+                            <br/>
+                            <br/>
+                            <TextField fullWidth align='center'  id="subject" label="CVC" variant="outlined" onChange={(e)=>{setCVC(e.target.value);}} />
+                            <br/>
+                            <br/>
+                            <TextField fullWidth align='center'  id="subject" label="Expiration Date" variant="outlined" onChange={(e)=>{setExpriation(e.target.value);}} />
+                            <br/>
+                            <br/>
+                        </CardContent>
+                        <CardActions align='center'>
+                            <Button variant="contained" color="primary" size="large" onClick={submit}>Continue</Button>
+                            <Button variant="contained" color="primary" size="large" onClick={cancel}>Cancel</Button>
+                        </CardActions>
+                    </Card>
+                </Grid>
+            </Grid>
         </div>
     );
 }

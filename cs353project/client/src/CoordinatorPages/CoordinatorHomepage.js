@@ -110,6 +110,7 @@ function CoordinatorHomepage() {
 
     return(
         <div>
+
             <CoordinatorSideBar title = "HomePage"></CoordinatorSideBar>
             <div >
 

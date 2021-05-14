@@ -132,7 +132,7 @@ export default function CoordinatorCagePageInfo(props) {
                                 {
                                     return (
                                         <Grid item xs={2}>
-                                            <AnimalCard animal={event.name}
+                                            <AnimalCard animal={event.name} animalInfo={event}
                                             />
                                         </Grid>
                                     )

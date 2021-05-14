@@ -105,7 +105,7 @@ export default function KeeperAnimalCard(props) {
                 options = {veterinarians}
                 animalID = {props.animalID}
             />
-            <ScheduleTrainingDialog open = {open2} handleClose={handleScheduleClose}>
+            <ScheduleTrainingDialog animalID = {props.animalID} open = {open2} handleClose={handleScheduleClose}>
             </ScheduleTrainingDialog>
         </Card>
     );

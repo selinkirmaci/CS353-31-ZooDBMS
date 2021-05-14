@@ -6,48 +6,42 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Axios from "axios";
 
-export default function FormDialog(props) {
-    const [respond,setRespond] = React.useState("");
+export default function DonationDialog() {
+    const [open, setOpen] = React.useState(false);
 
-    const submit = () => {
-        Axios.post("http://localhost:3001/api/respondToForm", {
-            formID:props.formID,
-            respond:respond,
-        }).then((response)=>{
-            alert('success');
-        });
-        alert('success');
-        props.onClose();
-    }
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     return (
         <div>
-            <Dialog fullWidth open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        Writer: {props.writer}
+                        To subscribe to this website, please enter your email address here. We will send updates
+                        occasionally.
                     </DialogContentText>
                     <TextField
                         autoFocus
                         margin="dense"
-                        id="respond"
-                        label="Respond"
-                        type="text"
+                        id="name"
+                        label="Email Address"
+                        type="email"
                         fullWidth
-                        multiline
-                        rows={20}
-                        onChange={(e)=>{setRespond(e.target.value)}}
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={submit} color="primary">
-                        Send
-                    </Button>
-                    <Button onClick={props.onClose} color="primary">
+                    <Button onClick={handleClose} color="primary">
                         Cancel
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                        Subscribe
                     </Button>
                 </DialogActions>
             </Dialog>

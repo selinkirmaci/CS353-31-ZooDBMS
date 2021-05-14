@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -9,6 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,8 +24,26 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function AnimalInformationPage() {
+export default function AnimalInformationPage(props) {
     const classes = useStyles();
+    const[treatments,setTreatments] = React.useState([]);
+    const[trainings,setTrainings] = React.useState([]);
+
+
+    useEffect(()=>{
+        const firstReq =   Axios.post("http://localhost:3001/api/getAnimalTreatments",{
+            animalID: props.location.data[0].animalInfo.animalID,
+        });
+
+        const secondReq =  Axios.post("http://localhost:3001/api/getAnimalTrainings",{
+            animalID: props.location.data[0].animalInfo.animalID,
+        });
+
+        Axios.all([firstReq,secondReq]).then((response)=>{
+            setTreatments(response[0].data);
+            setTrainings(response[1].data);
+        },[]);
+    })
 
     return (
         <div className={classes.root}>
@@ -34,13 +53,10 @@ export default function AnimalInformationPage() {
                             <CardContent>
                                 <br/>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    Animal Name
+                                   Animal Name : {props.location.data[0].animalInfo.name}
                                 </Typography>
                                 <Typography gutterBottom variant="h5" component="h2">
-                                    Animal Age
-                                </Typography>
-                                <Typography gutterBottom variant="h5" component="h2">
-                                    Animal Keeper Name
+                                    Animal Age : {props.location.data[0].animalInfo.age}
                                 </Typography>
                             </CardContent>
                     </Card>
@@ -52,12 +68,11 @@ export default function AnimalInformationPage() {
                             <Typography gutterBottom variant="h5" component="h2">
                                 Scheduled Trainings of the Animal
                             </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                17/02/2021 with jennifer
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                18/02/2021 with jennifer
-                            </Typography>
+                            {trainings.map((training) => (
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    Scheduled training with {training.name} {training.surname} in {(training.trainingDate).slice(0, 10)}
+                                </Typography>
+                            ))}
                         </CardContent>
                     </Card>
                 </Grid>
@@ -68,12 +83,11 @@ export default function AnimalInformationPage() {
                             <Typography gutterBottom variant="h5" component="h2">
                                 Scheduled Treatments of the Animal
                             </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                17/02/2021 with Dr. George
-                            </Typography>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                18/02/2021 with Dr. Lana
-                            </Typography>
+                            {treatments.map((treatment) => (
+                                <Typography gutterBottom variant="h5" component="h2">
+                                    Scheduled treatment with {treatment.name} {treatment.surname}
+                                </Typography>
+                            ))}
                         </CardContent>
                     </Card>
                 </Grid>

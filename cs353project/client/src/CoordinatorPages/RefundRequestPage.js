@@ -1,6 +1,6 @@
 import CageCard from "./CageCard";
 import CoordinatorSideBar from "./CoordinatorSideBar";
-import React from "react";
+import React, {useEffect} from "react";
 import { makeStyles } from '@material-ui/core/styles';
 
 import {Grid, Paper} from "@material-ui/core";
@@ -15,6 +15,7 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import RespondComplaintDialog from "./RespondComplaintDialog";
+import Axios from "axios";
 
 
 const useStyles = makeStyles({
@@ -31,6 +32,8 @@ function RefundRequestPage() {
     const classes = useStyles();
 
     const [open, setOpen] = React.useState(false);
+    const [refunds, setRefunds] = React.useState([]);
+
 
 
     const cages = [
@@ -56,6 +59,15 @@ function RefundRequestPage() {
         setOpen(false);
     };
 
+    useEffect(()=>{
+        const firstReq = Axios.get("http://localhost:3001/api/listRefundRequests");
+
+        Axios.all([firstReq]).then((response)=>{
+            setRefunds(response[0].data);
+        });
+    },[]);
+
+
     return(
         <div>
             <CoordinatorSideBar title = "Cage Page"></CoordinatorSideBar>
@@ -63,7 +75,7 @@ function RefundRequestPage() {
                 <br/>
                 <Grid style = {{justifyContent: 'center'}} container spacing = {10}>
                     {
-                        cages.map((event , index) =>
+                        refunds.map((event , index) =>
                             {
                                 return (
                                     <Grid item xs={2}>
@@ -71,10 +83,10 @@ function RefundRequestPage() {
                                             <CardActionArea>
                                                 <CardContent>
                                                     <Typography gutterBottom variant="h5" component="h2">
-                                                        Refund tour name
+                                                        Refund tour name: {event.eventName}
                                                     </Typography>
                                                     <Typography variant="body2" color="textSecondary" component="p">
-                                                        Money - Person
+                                                        Money: {event.price} - Person: {event.name} {event.surname}
                                                     </Typography>
                                                 </CardContent>
                                             </CardActionArea>

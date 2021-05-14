@@ -108,13 +108,13 @@ function VeterinarianHomepage(props) {
      */
     useEffect(()=>{
 
-        setVetID(props.location.data[0].userID);
+        setVetID(localStorage.getItem('userID'));
 
         const firstReq = Axios.post("http://localhost:3001/api/listTreatmentRequests", {
-            vetID:vetID,
+            vetID:localStorage.getItem('userID'),
         });
         const secondReq = Axios.post("http://localhost:3001/api/listEducationalInvitations", {
-            vetID:vetID,
+            vetID:localStorage.getItem('userID'),
         });
 
         Axios.all([firstReq,secondReq]).then((response)=>{

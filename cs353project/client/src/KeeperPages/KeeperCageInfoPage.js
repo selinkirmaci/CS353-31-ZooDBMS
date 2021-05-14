@@ -108,7 +108,7 @@ export default function CoordinatorCagePageInfo(props) {
                                 {
                                     return (
                                         <Grid item xs={2}>
-                                            <KeeperAnimalCard animalID = {event.animalID} keeperID = {props.keeperID} animalType={event.species} animal={event.name}
+                                            <KeeperAnimalCard animalID = {event.animalID} keeperID = {localStorage.getItem('userID')} animalType={event.species} animal={event.name}
                                             />
                                         </Grid>
                                     )

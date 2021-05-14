@@ -7,7 +7,8 @@ import {Sidebar} from "primereact/sidebar";
 import {AppBar,Toolbar,IconButton,Typography,InputBase,fade,makeStyles} from "@material-ui/core";
 import AppBarShort from "../AppBarShort";
 import EventCard from "../EventCard";
-import DonationCard from "./DonationCard";
+import Axios from "axios";
+import RegisterEventCard from "./RegisterEventCard";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -63,24 +64,18 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default class  VisitorOrganizationTable extends Component
+export default class  VisitorTourTable extends Component
 {
-
     constructor(props) {
         super(props);
         this.state = {
             suggestions: null,
             visibleLeft: false,
-            postArray: [
-                {title: "Event2",start:"Event2 start date",end:"Event end date",location:"event2 location",leftcap:"40"},
-                {title: "Event3",start:"Event3 start date",end:"Event end date",location:"event3 location",leftcap:"205"},
-                {title: "Event4",start:"Event4 start date",end:"Event end date",location:"event4 location",leftcap:"112"},
-                {title: "Event5",start:"Event5 start date",end:"Event end date",location:"event5 location",leftcap:"220"},
-                {title: "Event6",start:"Event6 start date",end:"Event end date",location:"event6 location",leftcap:"120"},
-            ]
+            postArray: [],
         };
         this.names = ['Audi', 'BMW', 'Fiat', 'Ford', 'Honda', 'Jaguar', 'Mercedes', 'Renault', 'Volvo'];
     }
+
     suggest(event) {
         let results = this.names.filter((names) => {
             return names.toLowerCase().startsWith(event.query.toLowerCase());
@@ -99,21 +94,22 @@ export default class  VisitorOrganizationTable extends Component
                             {
                                 return(
                                     <Grid item xs = {3}>
-                                        <DonationCard title = {post.name}
-                                                      time ={ post.time}
-                                                      date={post.date}
-                                                      location={post.location}
-                                                      leftcap={post.capacity}
-                                                      duration = {post.duration}
-                                                      price={post.price}
-                                                      userId = {this.props.userID}
-                                                      eventID = {post.eventID}
-                                                      money = {this.props.money}
+                                        <RegisterEventCard  title = {post.name}
+                                                    time ={ post.time}
+                                                    date={post.date}
+                                                    location={post.location}
+                                                    leftcap={post.capacity}
+                                                    duration = {post.duration}
+                                                    price={post.price}
+                                                    userId = {this.props.userID}
+                                                    eventID = {post.eventID}
                                                     leftModalButton="Accept"
                                                     rightModalButton="Decline"
-                                                    down="Donate to This Organization"
+                                                            down2="Request Refund"
+                                                            down3="Comment"
+                                                    down="See Details"
                                                     image="/images/t-logo.jpg"
-                                                    />
+                                        />
                                     </Grid>
                                 )
                             }

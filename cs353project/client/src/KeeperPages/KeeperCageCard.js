@@ -50,7 +50,7 @@ export default function KeeperCageCard(props) {
                     </Typography>
 
                 </CardContent>
-                <KeeperCageInfoPage keeperID = {props.keeperID} animalName = {props.animalName} cageID = {props.cageID} open = {open} handleClose = {handleClose} cageName = {props.animal}></KeeperCageInfoPage>
+                <KeeperCageInfoPage keeperID = {localStorage.getItem('userID')} animalName = {props.animalName} cageID = {props.cageID} open = {open} handleClose = {handleClose} cageName = {props.animal}></KeeperCageInfoPage>
             </CardActionArea>
             <CardActions>
                 <Button size="small" color="primary" onClick={handleInfoPage}>

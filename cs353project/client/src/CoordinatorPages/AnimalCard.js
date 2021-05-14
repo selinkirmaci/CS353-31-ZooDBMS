@@ -8,6 +8,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import AssignKeeperDialog from "./AssignKeeperDialog";
+import {Link} from "react-router-dom";
+import DialogActions from "@material-ui/core/DialogActions";
 
 const useStyles = makeStyles({
     root: {
@@ -21,8 +23,7 @@ export default function AnimalCard(props) {
 
 
     const handleInfoPage = () => {
-        let a = "animalid";
-        window.location.href="/coordinatoranimalinfo?"+a;
+
     };
 
     var imageURL = '/images/' + props.animal + '.jpg';
@@ -44,9 +45,14 @@ export default function AnimalCard(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary" onClick={handleInfoPage}>
+                <Link to={{
+                    pathname:"./coordinatoranimalinfo",
+                    data: [{animalInfo:props.animalInfo}],
+                }}>
+                <Button size="small" color="primary" >
                     More
                 </Button>
+                </Link>
             </CardActions>
         </Card>
     );

@@ -19,6 +19,8 @@ import VisitorHomePage from "./VisitorPages/VisitorHomePage";
 import GiftShopPage from "./GiftShopPage/GiftShopPage";
 import VisitorUserProfile from "./VisitorPages/VisitorUserProfile";
 import VisitorMoney from "./VisitorPages/VisitorMoney";
+import VisitorCompliantPage from "./VisitorPages/VisitorCompliantPage";
+import DisplayTrainings from "./KeeperPages/DisplayTrainings";
 
 function App() {
   return (
@@ -40,6 +42,10 @@ function App() {
               <Route path = "/coordinatorrefundrequests" exact component={RefundRequestPage}></Route>
               <Route path = "/keeperhomepage" exact component={KeeperHomepage}></Route>
               <Route path = "/veterinarianhomepage" exact component={VeterinarianHomepage}></Route>
+              <Route path = "/visitorcomplaintpage" exact component={VisitorCompliantPage}></Route>
+              <Route path = "/displayTrainings" exact component={DisplayTrainings}></Route>
+
+
 
           </Switch>
       </Router>

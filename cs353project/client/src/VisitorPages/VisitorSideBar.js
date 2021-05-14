@@ -20,6 +20,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import PetsIcon from '@material-ui/icons/Pets';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
 
 const drawerWidth = 240;
 
@@ -94,9 +95,9 @@ export default function VisitorSideBar(props) {
     };
     const handleClick = (index) => {
         if(index === 0)
-            window.location.href="/coordinatorhomepage";
+            window.location.href="/visitorhomepage";
         else if(index === 1)
-            window.location.href="/coordinatorcagepage";
+            window.location.href="/visitorcomplaintpage";
     };
 
     return (
@@ -139,9 +140,9 @@ export default function VisitorSideBar(props) {
                 </div>
                 <Divider />
                 <List>
-                    {['Homepage','Cages','Refund Requests'].map((text, index) => (
+                    {['Homepage','Make a Complaint'].map((text, index) => (
                         <ListItem onClick={() => handleClick(index)} button key={text}>
-                            <ListItemIcon>{index === 0 ? <HomeIcon/> : index === 1 ? <PetsIcon/> : <LocalAtmIcon/>}</ListItemIcon>
+                            <ListItemIcon>{index === 0 ? <HomeIcon/> :  <SpeakerNotesIcon/>}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}

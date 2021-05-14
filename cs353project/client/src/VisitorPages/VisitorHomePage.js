@@ -89,6 +89,8 @@ function VisitorHomePage(props) {
     const [group,setGroup] = React.useState([]);
     const [con,setCon] = React.useState([]);
     const [userID,setUserID] = React.useState("");
+    const [money,setMoney] = React.useState("");
+    const [user,setUser] = React.useState([]);
 
 
 
@@ -105,19 +107,26 @@ function VisitorHomePage(props) {
     const handleChoseEventClose = () => {
         setChoseEventClose(false);
     };
-    useEffect(()=>{
+    React.useEffect(()=>{
         console.log("before");
-        console.log(props.location.data[0].userID);
+        //console.log(props.location.data[0].userID);
         console.log("after");
-        setUserID(props.location.data[0].userID);
+        setUserID(localStorage.getItem('userID'));
 
 
         const firstReq = Axios.get("http://localhost:3001/api/listGuideTour");
         const secondReq =Axios.get("http://localhost:3001/api/listConservationOrganizations");
-
-        Axios.all([firstReq,secondReq]).then((response)=>{
+        const thirdReq = Axios.post("http://localhost:3001/api/getUserMoney", {
+            userID:localStorage.getItem('userID'),
+        });
+        const forthReq = Axios.post("http://localhost:3001/api/getUserInformation", {
+            userID:localStorage.getItem('userID'),
+        });
+        Axios.all([firstReq,secondReq,thirdReq,forthReq]).then((response)=>{
             setGroup(response[0].data);
             setCon(response[1].data);
+            setMoney((response[2].data).amountOfMoney);
+            setUser(response[3].data);
         });
     },[]);
 
@@ -185,7 +194,7 @@ function VisitorHomePage(props) {
 
                         <TabPanel value={value} index={0} dir={theme.direction}>
                             {/* <h1>Group Tours</h1> */}
-                            <VisitorTourTable userID = {userID} list={group}></VisitorTourTable>
+                            <VisitorTourTable userID = {localStorage.getItem('userID')} list={group}></VisitorTourTable>
                         </TabPanel>
                         {/* <TabPanel value={value} index={1} dir={theme.direction}>
                             <h1>Educational Programs</h1>
@@ -194,7 +203,7 @@ function VisitorHomePage(props) {
                         </TabPanel> */}
                         <TabPanel value={value} index={1} dir={theme.direction}>
                             {/* <h1>Conservational Organizations</h1> */}
-                            <VisitorOrganizationTable list={con}></VisitorOrganizationTable>
+                            <VisitorOrganizationTable  money = {money} userID = {localStorage.getItem('userID')} list={con}></VisitorOrganizationTable>
                         </TabPanel>
                     </SwipeableViews>
                 </div>

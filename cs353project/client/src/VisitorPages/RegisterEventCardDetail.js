@@ -46,14 +46,8 @@ export default function EventDetailModal(props)  {
                 <h5 style={{marginTop:"2em"}}>Duration</h5>
                 {props.duration}
                 <br/>
-                <h5 style={{marginTop:"2em"}}>Price</h5>
-                {props.price}
                 <br/>
             </Modal.Body>
-            <Modal.Footer>
-                <Button onClick={submit}>{props.leftModalButton}</Button>
-                <Button onClick={props.onHide}>{props.rightModalButton}</Button>
-            </Modal.Footer>
         </Modal>
     );
 }

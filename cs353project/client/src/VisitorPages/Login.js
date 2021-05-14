@@ -34,8 +34,11 @@ export default function Login()
         }).then((response)=>{
             console.log(response.data);
             setUserID(response.data);
+            localStorage.setItem('userID',response.data);
+
             alert('success');
         });
+        console.log(userID);
     }
     const [state, setState] = React.useState({
         admin : false,

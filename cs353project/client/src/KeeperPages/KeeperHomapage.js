@@ -20,10 +20,10 @@ function KeeperHomepage(props) {
 
     useEffect(()=>{
 
-        setKeeperID(props.location.data[0].userID);
+        setKeeperID(localStorage.getItem('userID'));
 
         Axios.post("http://localhost:3001/api/getAssignedCages", {
-            keeperID:keeperID,
+            keeperID:localStorage.getItem('userID'),
         }).then((response)=>{
             setCages(response.data);
         });
@@ -72,7 +72,7 @@ function KeeperHomepage(props) {
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <KeeperCageCard keeperID = {keeperID} cageID = {event.cageID} animalName = {event.name} animal={event.animalType}
+                                        <KeeperCageCard keeperID = {localStorage.getItem('userID')} cageID = {event.cageID} animalName = {event.name} animal={event.animalType}
                                         />
                                     </Grid>
                                 )

@@ -32,6 +32,15 @@ app.get("/api/listEventsToVisitor" ,(req,res)=>{
     });
 });
 
+app.post("/api/getUserMoney" ,(req,res)=>{
+    const visitorID = req.body.userID;
+    const sqlInsert = "SELECT amountOfMoney FROM visitor where visitorID = ?;";
+    db.query(sqlInsert,[visitorID],(err,result)=>{
+        var d = JSON.parse(JSON.stringify(result[0]));
+        res.send(d.amountOfMoney.toString());
+    });
+});
+
 app.get("/api/listGuideTour" ,(req,res)=>{
     const sqlInsert = "SELECT * FROM group_tour ep, event e WHERE ep.eventID = e.eventID";
     db.query(sqlInsert,(err,result)=>{
@@ -72,6 +81,33 @@ app.post("/api/getAssignedCages" ,(req,res)=>{
         res.send(result);
     });
 });
+app.post("/api/getUserInformation" ,(req,res)=>{
+    const userID = req.body.userID;
+    const sqlInsert = "select * from user u, visitor v where v.visitorID = u.userID and v.visitorID = ?;";
+    db.query(sqlInsert,[userID],(err,result)=>{
+        res.send(result);
+    });
+});
+app.post("/api/getRegisteredEvents" ,(req,res)=>{
+    const userID = req.body.userID;
+
+    const sqlInsert = "SELECT * FROM event e,register_event r where e.eventID = r.eventID and visitorID = ?;";
+    db.query(sqlInsert,[userID],(err,result)=>{
+        res.send(result);
+    });
+});
+app.post("/api/requestRefund" ,(req,res)=>{
+    const userID = req.body.userID;
+    const eventID = req.body.eventID;
+
+
+    const sqlInsert = "insert into request_refund (visitorID,coordID,eventID) values (?,(select max(coordID) from coordinator),?)";
+    db.query(sqlInsert,[userID,eventID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+
 
 app.post("/api/getAnimalsOfCage" ,(req,res)=>{
     const cageId = req.body.cageID;
@@ -80,12 +116,21 @@ app.post("/api/getAnimalsOfCage" ,(req,res)=>{
         res.send(result);
     });
 });
+
 app.get("/api/getVeterinarians" ,(req,res)=>{
     const sqlInsert = "SELECT name, userID FROM user WHERE userID in ( SELECT employeeID FROM employee WHERE employeeID in ( SELECT vetID FROM veterinarian ) );";
     db.query(sqlInsert,(err,result)=>{
         res.send(result);
     });
 });
+
+app.get("/api/getComplaints" ,(req,res)=>{
+    const sqlInsert = "SELECT * from complaint_form;";
+    db.query(sqlInsert,(err,result)=>{
+        res.send(result);
+    });
+});
+
 app.post("/api/assignKeeper" ,(req,res)=>{
     const cageId = req.body.cageID;
     const keeperID = req.body.keeperID;
@@ -98,6 +143,54 @@ app.post("/api/assignKeeper" ,(req,res)=>{
         res.send(result);
     });
 });
+
+app.post("/api/respondToForm" ,(req,res)=>{
+    const formID = req.body.formID;
+    const respond = req.body.respond;
+
+    const sqlInsert = "insert into respond_form (formID,coordID,response) values (?,(select max(coordID) from coordinator),?);";
+    const sqlDelete2 = "DELETE FROM complaint_form WHERE formID = ?;";
+    const sqlDelete = "DELETE FROM create_form WHERE formID = ?;";
+
+    db.query(sqlInsert,[formID,respond],(err,result)=>{
+    });
+ /*
+    db.query(sqlDelete2,[formID],(err,result)=>{
+    });
+    db.query(sqlDelete,[formID],(err,result)=>{
+    });
+  */
+});
+app.post("/api/displayTrainings" ,(req,res)=>{
+    const keeperID = req.body.keeperID;
+
+    const sqlInsert = "SELECT * FROM schedule_training s,animal a where keeperID = ? and s.animalID = a.animalID;";
+
+    db.query(sqlInsert,[keeperID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+
+app.post("/api/scheduleTraining" ,(req,res)=>{
+    const animalID = req.body.animalID;
+    const keeperID = req.body.keeperID;
+    const trainingDate = req.body.trainingDate;
+
+
+    const sqlInsert = "insert into schedule_training value (?,?,?);";
+
+    db.query(sqlInsert,[keeperID,animalID,trainingDate],(err,result)=>{
+        console.log(err);
+    });
+    /*
+       db.query(sqlDelete2,[formID],(err,result)=>{
+       });
+       db.query(sqlDelete,[formID],(err,result)=>{
+       });
+     */
+});
+
 app.post("/api/assignVeterinarian" ,(req,res)=>{
     const vetID = req.body.vetID;
     const animalID = req.body.animalID;
@@ -148,6 +241,15 @@ app.post("/api/insert",function(req,res){
     const sqlInsert = "INSERT INTO cage (cageID,capacity,number) VALUES (?,?,?);";
     db.query(sqlInsert,[cageId,capacity,number],(err,result)=>{
         res.send("hello selin");
+
+    });
+});
+
+app.get("/api/listRefundRequests",function(req,res){
+
+    const sqlInsert = "select e.name as eventName, u.name,u.surname, g.price from event e,visitor v,user u, request_refund r, group_tour g where e.eventID = r.eventID and u.userID = v.visitorID and r.visitorID = v.visitorID and g.eventID = e.eventID;";
+    db.query(sqlInsert,(err,result)=>{
+        res.send(result);
 
     });
 });
@@ -297,31 +399,97 @@ app.delete("/api/deleteConOrg/:eventID" ,(req,res)=>{
 app.put("/api/updateUserMoney" ,(req,res)=>{
     const userID = req.body.userID;
     const price = req.body.price;
-    console.log(userID);
-    console.log(price);
-
 
     const sqlInsert = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) - ? where visitorID = ?;";
 
 
     db.query(sqlInsert,[userID,price,userID],(err,result)=>{
-        console.log("done");
-        console.log(result);
     });
 });
+
+app.put("/api/uploadMoney" ,(req,res)=>{
+    const userID = req.body.userID;
+    const price = req.body.price;
+
+    const sqlInsert = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) + ? where visitorID = ?;";
+
+
+    db.query(sqlInsert,[userID,price,userID],(err,result)=>{
+    });
+});
+
+app.put("/api/updateMoneyRaised" ,(req,res)=>{
+    const price = req.body.price;
+    const eventID = req.body.eventID;
+
+    console.log(eventID);
+    const sqlInsert = "update conservation_organization set totalMoneyRaised = (select totalMoneyRaised from conservation_organization c, event e where e.eventID = c.eventID and e.eventID =?)+? where eventID = ?;";
+
+
+    db.query(sqlInsert,[eventID,price,eventID],(err,result)=>{
+        console.log("done");
+    });
+});
+
 app.post("/api/registerToEvent" ,(req,res)=>{
     const visitorID = req.body.userID;
     const eventID = req.body.eventID;
+    const price = req.body.price;
+
 
     const sqlInsert = "INSERT INTO register_event (visitorID,eventID) VALUES (?,?);";
+    const sqlInsert2 = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) - ? where visitorID = ?;";
 
     console.log(visitorID);
     console.log(eventID);
 
     db.query(sqlInsert,[visitorID,eventID],(err,result)=>{
-        console.log(err);
+    });
+    db.query(sqlInsert2,[visitorID,price,visitorID],(err,result)=>{
     });
 });
+
+
+
+app.post("/api/getAnimalTreatments" ,(req,res)=>{
+    const animalID = req.body.animalID;
+
+    const sqlInsert = "SELECT * FROM animal,veterinarian,user where animalID in (select a.animalID from animal a, treatment_request t where a.animalID = t.animalID and a.animalID = ? and t.status = 'pending') and vetID in (select t.vetID from animal a, treatment_request t where a.animalID = t.animalID and a.animalID = ? and t.status = 'pending') and vetID = userID;";
+
+
+    db.query(sqlInsert,[animalID,animalID],(err,result)=>{
+        res.send(result);
+    });
+});
+app.post("/api/getAnimalTrainings" ,(req,res)=>{
+    const animalID = req.body.animalID;
+
+    const sqlInsert = "select u.name,s.trainingDate,u.surname from keeper k,user u,animal a,schedule_training s where s.keeperID = u.userID and k.keeperID = s.keeperID and a.animalID = ? and a.animalID = s.animalID;";
+
+
+    db.query(sqlInsert,[animalID],(err,result)=>{
+        res.send(result);
+    });
+});
+app.post("/api/sendComplaint" ,(req,res)=>{
+
+    const name = req.body.name;
+    const subject = req.body.subject;
+    const message = req.body.message;
+    const userID = req.body.userID;
+
+    const sqlInsert = "insert into complaint_form (name,subject,message,date) values (?,?,?,'2020-02-02');";
+    const sqlInsert2 = "insert into create_form (formID,visitorID,eventID) values ((select max(formID) from complaint_form),?,(select max(eventID) from group_tour));";
+
+
+    db.query(sqlInsert,[name,subject,message],(err,result)=>{
+    });
+    db.query(sqlInsert2,[userID],(err,result)=>{
+        res.send(result);
+    });
+
+});
+
 
 
 

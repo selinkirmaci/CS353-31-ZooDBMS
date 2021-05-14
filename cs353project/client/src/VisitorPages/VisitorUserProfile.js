@@ -17,8 +17,10 @@ import VisitorTourTable from "./VisitorTourTable";
 // import EducationalTable from "./EducationalTable";
 import VisitorOrganizationTable from "./VisitorOrganizationTable";
 import VisitorEducationalTable from "./VisitorEducationalTable";
+import VisitorRegisteredEvents from "./VisitorRegisteredEvents";
 import {Button} from "@material-ui/core";
 import {Link} from "react-router-dom";
+import Axios from "axios";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -64,6 +66,9 @@ const useStyles = makeStyles((theme) => ({
 function VisitorUserProfile() {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [registeredEvents, setRegisteredEvents] = React.useState([]);
+    const [user,setUser] = React.useState([]);
+
     const theme = useTheme();
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -71,6 +76,20 @@ function VisitorUserProfile() {
     const handleChangeIndex = (index) => {
         setValue(index);
     };
+    React.useEffect(()=>{
+
+        const firstReq = Axios.post("http://localhost:3001/api/getRegisteredEvents", {
+            userID:localStorage.getItem('userID'),
+        });
+        const secondReq = Axios.post("http://localhost:3001/api/getUserInformation", {
+            userID:localStorage.getItem('userID'),
+        });
+        Axios.all([firstReq,secondReq]).then((response)=>{
+            setRegisteredEvents(response[0].data);
+            setUser(response[1].data[0]);
+
+        });
+    },[]);
         return(
             <div>
                 <AppBarShort title = "Profile"></AppBarShort>
@@ -86,16 +105,16 @@ function VisitorUserProfile() {
                      </div >
 
                             <div  clasName = "p-col" style={{width:'20%',marginTop:'1.2em'}}>
-                                <h3>Selin Kırmacı</h3>
+                                <h3>{user.name} {user.surname}</h3>
                                 <br/>
-                                <h6>Username: selinkirmaci</h6>
-                                 <h6>Email: selinkirmaci@gmail.com</h6>
+                                <h6>Username: {user.username}</h6>
+                                 <h6>Email: {user.email}</h6>
                                 </div>
                      <div  clasName = "p-col" style={{marginLeft:'10em',width:'20%',marginTop:'1.2em'}}>
 
                             <Card style={{height: '80%'}}>
-                                <h4>Registered Events</h4>
-                                <h3 style={{marginLeft:'43%',marginTop:'1em'}}>97</h3>
+                                <h4>Total Money Left On The System</h4>
+                                <h3 style={{marginLeft:'43%',marginTop:'1em'}}>{user.amountOfMoney}</h3>
                             </Card>
                      </div>
                  </div>
@@ -105,39 +124,7 @@ function VisitorUserProfile() {
                                 <Button variant = "contained" color = "primary">Add Money</Button>
                             </Link>
                         </div>
-                        <Tabs
-                            value={value}
-                            onChange={handleChange}
-                            indicatorColor="primary"
-                            textColor="primary"
-                            centered
-                        >
-                            <Tab label="Registered Group Tours">
-                            </Tab>
-                            <Tab label="Registered Educational Tours" />
-                        </Tabs>
-
-                        <SwipeableViews
-                            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                            index={value}
-                            onChangeIndex={handleChangeIndex}
-                        >
-                            <TabPanel value={value} index={0} dir={theme.direction}>
-                            {/* <h1>Group Tours</h1> */}
-                            <VisitorTourTable></VisitorTourTable>
-                        </TabPanel>
-                        <TabPanel value={value} index={1} dir={theme.direction}>
-                            {/* <h1>Educational Programs</h1> */}
-                            <VisitorEducationalTable></VisitorEducationalTable>
-
-                        </TabPanel>
-
-                        {/* <TabPanel value={value} index={1} dir={theme.direction}>
-                            //<h1>Conservational Organizations</h1>
-                            <VisitorOrganizationTable></VisitorOrganizationTable>
-                        </TabPanel> */}
-
-                        </SwipeableViews>
+                        <VisitorRegisteredEvents list = {registeredEvents}></VisitorRegisteredEvents>
                     </div>
                 </Card>
 

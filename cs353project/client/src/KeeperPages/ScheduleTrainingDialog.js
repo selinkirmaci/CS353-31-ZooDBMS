@@ -1,5 +1,5 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import {makeStyles, withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
@@ -16,6 +16,8 @@ import {
     KeyboardDatePicker,
 } from '@material-ui/pickers';
 import DatePicker from "./DatePicker";
+import TextField from "@material-ui/core/TextField";
+import Axios from "axios";
 
 
 const styles = (theme) => ({
@@ -30,6 +32,18 @@ const styles = (theme) => ({
         color: theme.palette.grey[500],
     },
 });
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+        display: 'flex',
+        flexWrap: 'wrap',
+    },
+    textField: {
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+        width: 200,
+    },
+}));
 
 const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -59,11 +73,27 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function CustomizedDialogs(props) {
+    const classes = useStyles();
     const [selectedDate, setSelectedDate] = React.useState(new Date('2014-08-18T21:11:54'));
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
     };
+    const submit= ()=>{
+        console.log(selectedDate);
+
+        Axios.post("http://localhost:3001/api/scheduleTraining", {
+            keeperID: localStorage.getItem('userID'),
+            animalID: props.animalID,
+            trainingDate: selectedDate,
+        }).then((response)=>{
+            console.log("done");
+            alert('success');
+        });
+
+        alert('success');
+        props.handleClose();
+    }
     return (
         <div>
             <Dialog onClose={props.handleClose} aria-labelledby="customized-dialog-title" open={props.open}>
@@ -71,10 +101,22 @@ export default function CustomizedDialogs(props) {
                     Date for training
                 </DialogTitle>
                 <DialogContent>
-                    <DatePicker></DatePicker>
+                    <form className={classes.container} noValidate>
+                        <TextField
+                            id="date"
+                            label="date"
+                            type="date"
+                            defaultValue="2021-02-02"
+                            className={classes.textField}
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            onChange={(e)=>{ setSelectedDate(e.target.value);}}
+                        />
+                    </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button autoFocus onClick={props.handleClose} color="primary">
+                    <Button autoFocus onClick={submit} color="primary">
                         Save changes
                     </Button>
                 </DialogActions>
