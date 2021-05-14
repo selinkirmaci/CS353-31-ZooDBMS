@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function VeterinarianSidebar(props) {
+export default function CoordinatorSideBar(props) {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -95,14 +95,15 @@ export default function VeterinarianSidebar(props) {
         setOpen(false);
     };
     const handleClick = (index) => {
+
         if(index === 0)
-            window.location.href="/coordinatorhomepage";
+            window.location.href="/veterinarianhomepage";
         else if(index === 1)
-            window.location.href="/coordinatorcagepage";
+            window.location.href="/displayTreatments";
         else if(index === 2)
-            window.location.href="/coordinatorrefundrequests";
-        else
-            window.location.href="/coordinatorcomplaints";
+            window.location.href="/displayEducationalProgram";
+
+
     };
 
     return (
@@ -145,7 +146,7 @@ export default function VeterinarianSidebar(props) {
                 </div>
                 <Divider />
                 <List>
-                    {['Homepage','Cages','Refund Requests','Display Complaints'].map((text, index) => (
+                    {['Homepage','Display Treatments','Display Educational Program'].map((text, index) => (
                         <ListItem onClick={() => handleClick(index)} button key={text}>
                             <ListItemIcon>{index === 0 ? <HomeIcon/> : index === 1 ? <PetsIcon/> : index ===2 ? <LocalAtmIcon /> : <SpeakerNotesIcon/>}</ListItemIcon>
                             <ListItemText primary={text} />

@@ -59,6 +59,32 @@ function RefundRequestPage() {
         setOpen(false);
     };
 
+    const handleAccept = (eventID,userID) => {
+        const firstReq =  Axios.put("http://localhost:3001/api/giveRefund",{
+            userID:userID ,
+            eventID: eventID,
+        });
+        const secondReq =  Axios.post("http://localhost:3001/api/acceptRefund",{
+            userID:userID ,
+            eventID: eventID,
+        })
+
+        Axios.all([firstReq,secondReq]).then((response)=>{
+        },[]);
+        window.location.reload();
+    };
+    const handleReject = (eventID,userID) => {
+        const firstReq =  Axios.post("http://localhost:3001/api/rejectRefund",{
+            userID:userID ,
+            eventID: eventID,
+        });
+
+        Axios.all([firstReq]).then((response)=>{
+        },[]);
+        window.location.reload();
+
+    };
+
     useEffect(()=>{
         const firstReq = Axios.get("http://localhost:3001/api/listRefundRequests");
 
@@ -91,10 +117,10 @@ function RefundRequestPage() {
                                                 </CardContent>
                                             </CardActionArea>
                                             <CardActions>
-                                                <Button size="small" color="primary">
+                                                <Button size="small" color="primary" onClick={() =>handleAccept(event.eventID,event.userID)}>
                                                     Accept
                                                 </Button>
-                                                <Button size="small" color="primary">
+                                                <Button size="small" color="primary"  onClick={() =>handleReject(event.eventID,event.userID)}>
                                                     Reject
                                                 </Button>
                                             </CardActions>

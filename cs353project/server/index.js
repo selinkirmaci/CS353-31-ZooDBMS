@@ -36,8 +36,9 @@ app.post("/api/getUserMoney" ,(req,res)=>{
     const visitorID = req.body.userID;
     const sqlInsert = "SELECT amountOfMoney FROM visitor where visitorID = ?;";
     db.query(sqlInsert,[visitorID],(err,result)=>{
-        var d = JSON.parse(JSON.stringify(result[0]));
-        res.send(d.amountOfMoney.toString());
+        //var d = JSON.parse(JSON.stringify(result[0]));
+        //res.send(d.amountOfMoney.toString());
+        console.log("öomeınl");
     });
 });
 
@@ -214,7 +215,7 @@ app.post("/api/inviteVeterinarian" ,(req,res)=>{
 app.post("/api/listTreatmentRequests" ,(req,res)=>{
     const vetID = req.body.vetID;
 
-    const sqlInsert = "SELECT * FROM animal WHERE animalID in (SELECT animalID FROM treatment_request WHERE vetID = ?);";
+    const sqlInsert = "SELECT * FROM animal WHERE animalID in (SELECT animalID FROM treatment_request WHERE vetID = ? and status = 'pending');";
 
     db.query(sqlInsert,[vetID],(err,result)=>{
         res.send(result);
@@ -223,7 +224,17 @@ app.post("/api/listTreatmentRequests" ,(req,res)=>{
 app.post("/api/listEducationalInvitations" ,(req,res)=>{
     const vetID = req.body.vetID;
 
-    const sqlInsert = "SELECT * FROM event WHERE eventID in (SELECT eventID FROM invite WHERE vetID = ?);";
+    const sqlInsert = "SELECT * FROM event WHERE eventID in (SELECT eventID FROM invite WHERE vetID = ? and status='pending');";
+
+    db.query(sqlInsert,[vetID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+app.post("/api/listEducationalInvitationsRegistered" ,(req,res)=>{
+    const vetID = req.body.vetID;
+
+    const sqlInsert = "SELECT * FROM event e,educational_program ep WHERE e.eventID in (SELECT eventID FROM invite WHERE vetID = ? and status='accepted') and e.eventID = ep.eventID;";
 
     db.query(sqlInsert,[vetID],(err,result)=>{
         res.send(result);
@@ -247,7 +258,7 @@ app.post("/api/insert",function(req,res){
 
 app.get("/api/listRefundRequests",function(req,res){
 
-    const sqlInsert = "select e.name as eventName, u.name,u.surname, g.price from event e,visitor v,user u, request_refund r, group_tour g where e.eventID = r.eventID and u.userID = v.visitorID and r.visitorID = v.visitorID and g.eventID = e.eventID;";
+    const sqlInsert = "select e.name as eventName, u.name,u.surname,u.userID,e.eventID, g.price from event e,visitor v,user u, request_refund r, group_tour g where e.eventID = r.eventID and u.userID = v.visitorID and r.visitorID = v.visitorID and g.eventID = e.eventID;";
     db.query(sqlInsert,(err,result)=>{
         res.send(result);
 
@@ -259,12 +270,15 @@ app.post("/api/login" ,(req,res)=>{
     const password = req.body.password;
     const sqlInsert = "SELECT * FROM user WHERE user.username = ? and user.password= ?;";
 
+    console.log(username);
+    console.log(password);
 
     db.query(sqlInsert,[username,password],(err,result)=>{
         var d = JSON.parse(JSON.stringify(result[0]));
         console.log(d.userID);
         console.log("succesfull login");
         res.send(d.userID.toString());
+        console.log("after readin toStirng")
     });
 });
 
@@ -396,12 +410,46 @@ app.delete("/api/deleteConOrg/:eventID" ,(req,res)=>{
     });
 });
 
+app.post("/api/acceptRefund" ,(req,res)=>{
+    const eventID = req.body.eventID;
+    const userID = req.body.userID;
+
+    console.log(eventID);
+    console.log(userID);
+
+    const sqlInsert = "DELETE FROM register_event WHERE eventID = ? and visitorID = ?;";
+    const sqlInsert2 = "DELETE FROM request_refund WHERE eventID = ? and visitorID = ?;";
+
+    db.query(sqlInsert,[eventID,userID],(err,result)=>{
+    });
+    db.query(sqlInsert2,[eventID,userID],(err,result)=>{
+    });
+
+});
+
+app.post("/api/rejectRefund" ,(req,res)=>{
+    const eventID = req.body.eventID;
+    const userID = req.body.userID;
+
+    console.log(eventID);
+    console.log(userID);
+
+    const sqlInsert = "DELETE FROM register_event WHERE eventID = ? and visitorID = ?;";
+    const sqlInsert2 = "DELETE FROM request_refund WHERE eventID = ? and visitorID = ?;";
+
+    db.query(sqlInsert,[eventID,userID],(err,result)=>{
+    });
+    db.query(sqlInsert2,[eventID,userID],(err,result)=>{
+    });
+
+});
+
+
 app.put("/api/updateUserMoney" ,(req,res)=>{
     const userID = req.body.userID;
     const price = req.body.price;
 
     const sqlInsert = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) - ? where visitorID = ?;";
-
 
     db.query(sqlInsert,[userID,price,userID],(err,result)=>{
     });
@@ -428,6 +476,80 @@ app.put("/api/updateMoneyRaised" ,(req,res)=>{
 
     db.query(sqlInsert,[eventID,price,eventID],(err,result)=>{
         console.log("done");
+    });
+});
+
+app.put("/api/giveRefund" ,(req,res)=>{
+    const userID = req.body.userID;
+    const eventID = req.body.eventID;
+
+    const sqlInsert = "update visitor v set v.amountOfMoney = v.amountOfMoney + (select g.price from event e,request_refund r,group_tour g where e.eventID = r.eventID and e.eventID = ? and e.eventID = g.eventID) where v.visitorID = ?; ";
+
+
+    db.query(sqlInsert,[eventID,userID],(err,result)=>{
+        console.log("refund given");
+    });
+});
+
+app.put("/api/acceptTreatment" ,(req,res)=>{
+    const vetID = req.body.vetID;
+    const animalID = req.body.animalID;
+
+    const sqlInsert = "update treatment_request set status = 'accepted' where vetID = ? and animalID = ?; ";
+
+
+    db.query(sqlInsert,[vetID,animalID],(err,result)=>{
+        console.log(vetID + " accepted treatment ");
+    });
+});
+
+app.put("/api/acceptInvitation" ,(req,res)=>{
+    const vetID = req.body.vetID;
+    const eventID = req.body.eventID;
+
+    const sqlInsert = "update invite set status = 'accepted' where vetID = ? and eventID = ?; ";
+
+
+    db.query(sqlInsert,[vetID,eventID],(err,result)=>{
+        console.log(vetID + " accepted treatment ");
+    });
+});
+
+
+app.put("/api/rejectInvitation" ,(req,res)=>{
+    const vetID = req.body.vetID;
+    const eventID = req.body.eventID;
+
+    const sqlInsert = "update invite set status = 'rejected' where vetID = ? and eventID = ?; ";
+
+
+    db.query(sqlInsert,[vetID,eventID],(err,result)=>{
+        console.log(vetID + " accepted treatment ");
+    });
+});
+
+
+
+app.post("/api/displayTreatments" ,(req,res)=>{
+    const vetID = req.body.vetID;
+
+    const sqlInsert = "select * from animal a, treatment_request t where t.vetID = 55 and t.status = 'accepted' and t.animalID = a.animalID; ";
+
+    db.query(sqlInsert,[vetID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+
+app.put("/api/rejectTreatment" ,(req,res)=>{
+    const vetID = req.body.vetID;
+    const animalID = req.body.animalID;
+
+    const sqlInsert = "update treatment_request set status = 'rejected' where vetID = ? and animalID = ?; ";
+
+
+    db.query(sqlInsert,[vetID,animalID],(err,result)=>{
+        console.log(vetID + " accepted treatment ");
     });
 });
 

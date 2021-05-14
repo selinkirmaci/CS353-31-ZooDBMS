@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import VeterinarianListDialog from "../KeeperPages/VeterinarianListDialog";
 import ScheduleTrainingDialog from "../KeeperPages/ScheduleTrainingDialog";
+import Axios from "axios";
 const useStyles = makeStyles({
     root: {
         maxWidth: 345,
@@ -43,12 +44,31 @@ export default function TreatmentRequestCard(props) {
         window.location.href="/coordinatoranimalinfo?"+a;
     };
     const handleTreatment = () => {
-        setOpen(true);
+        const firstReq = Axios.put("http://localhost:3001/api/acceptTreatment",{
+            vetID:localStorage.getItem('userID'),
+            animalID : props.animalID,
+        });
+
+        Axios.all([firstReq]).then((response)=>{
+            alert("Treament accepted");
+        },[]);
+        alert("Treament accepted");
+
+        window.location.reload();
     };
 
-    const handleTreatmentClose = () => {
-        setOpen(false);
-    };
+    const handleReject = () => {
+        const firstReq = Axios.put("http://localhost:3001/api/rejectTreatment",{
+            vetID:localStorage.getItem('userID'),
+            animalID : props.animalID,
+        });
+
+        Axios.all([firstReq]).then((response)=>{
+            alert("Treament accepted");
+        },[]);
+        alert("Treament rejected");
+
+        window.location.reload();    };
 
     const handleScheduleOpen = () => {
         setOpen2(true);
@@ -70,10 +90,10 @@ export default function TreatmentRequestCard(props) {
                 </CardContent>
             </CardActionArea>
             <CardActions>
-                <Button size="small" color="primary" onClick={handleScheduleOpen}>
+                <Button size="small" color="primary" onClick={handleTreatment}>
                     Schedule
                 </Button>
-                <Button size="small" color="primary" onClick={handleTreatment}>
+                <Button size="small" color="primary" onClick={handleReject}>
                     Reject
                 </Button>
             </CardActions>

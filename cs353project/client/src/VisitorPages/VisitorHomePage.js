@@ -108,26 +108,32 @@ function VisitorHomePage(props) {
         setChoseEventClose(false);
     };
     React.useEffect(()=>{
-        console.log("before");
-        //console.log(props.location.data[0].userID);
-        console.log("after");
         setUserID(localStorage.getItem('userID'));
 
 
         const firstReq = Axios.get("http://localhost:3001/api/listGuideTour");
         const secondReq =Axios.get("http://localhost:3001/api/listConservationOrganizations");
+/*
         const thirdReq = Axios.post("http://localhost:3001/api/getUserMoney", {
             userID:localStorage.getItem('userID'),
         });
+        */
         const forthReq = Axios.post("http://localhost:3001/api/getUserInformation", {
             userID:localStorage.getItem('userID'),
         });
-        Axios.all([firstReq,secondReq,thirdReq,forthReq]).then((response)=>{
+        console.log("done");
+
+        Axios.all([firstReq,secondReq,forthReq]).then((response)=>{
             setGroup(response[0].data);
             setCon(response[1].data);
-            setMoney((response[2].data).amountOfMoney);
-            setUser(response[3].data);
+            //setMoney((response[2].data).amountOfMoney);
+            setUser(response[2].data);
+            console.log(response[0].data);
+            console.log("done3");
+
         });
+        console.log("done2");
+
     },[]);
 
     return(

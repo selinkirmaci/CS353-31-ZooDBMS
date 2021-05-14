@@ -91,7 +91,7 @@ export default function EducationalCardDisplay(props) {
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <EducationalRequestCard eventName={event.name}
+                                        <EducationalRequestCard eventID = {event.eventID} eventName={event.name}
                                         />
                                     </Grid>
                                 )

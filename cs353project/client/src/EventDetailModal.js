@@ -13,7 +13,7 @@ export default function EventDetailModal(props)  {
 
          */
         Axios.post("http://localhost:3001/api/registerToEvent",{
-            userID: props.userId,
+            userID: localStorage.getItem('userID'),
             eventID: props.eventID,
             price: props.price,
 

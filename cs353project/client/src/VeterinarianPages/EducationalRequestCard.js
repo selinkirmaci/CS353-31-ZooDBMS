@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import Axios from 'axios';
 
 const useStyles = makeStyles({
     root: {
@@ -32,9 +33,21 @@ export default function EducationalRequestCard(props) {
     const classes2 = useStyles2();
 
     const handleAccept = () => {
+        Axios.put("http://localhost:3001/api/acceptInvitation",{
+            vetID:localStorage.getItem('userID'),
+            eventID : props.eventID,
+        });
+        alert("Invitation Accepted");
     };
 
     const handleReject = () => {
+        Axios.put("http://localhost:3001/api/rejectInvitation",{
+            vetID:localStorage.getItem('userID'),
+            eventID : props.eventID,
+
+        });
+        alert("Invitation Rejected");
+
     };
 
     return (

@@ -13,9 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import Slide from '@material-ui/core/Slide';
 import {Grid} from "@material-ui/core";
-import EducationalRequestCard from "./EducationalRequestCard";
-import KeeperSideBar from "../KeeperPages/KeeperSideBar";
-import KeeperCageCard from "../KeeperPages/KeeperCageCard";
 import TreatmentRequestCard from "./TreatmentRequestCard";
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -92,7 +89,9 @@ export default function TreatmentCardDisplay(props) {
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <TreatmentRequestCard animal = {event.name}/>
+                                        <TreatmentRequestCard animal = {event.name}
+                                                              animalID = {event.animalID}
+                                        />
                                     </Grid>
                                 )
                             }
