@@ -92,7 +92,7 @@ function VisitorUserProfile() {
     },[]);
         return(
             <div>
-                <AppBarShort title = "Profile"></AppBarShort>
+                <VisitorSideBar title = "Profile"></VisitorSideBar>
 
                 <Card style={{marginLeft: '1.7em',marginTop:'2em',marginBottom:'1em',width : '97%',height: '55%'}}>
                  <div className = "p-grid">

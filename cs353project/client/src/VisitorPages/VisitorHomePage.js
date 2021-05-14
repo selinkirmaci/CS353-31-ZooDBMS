@@ -139,45 +139,6 @@ function VisitorHomePage(props) {
     return(
         <div>
             <VisitorSideBar title = "Visitor"></VisitorSideBar>
-            <div >
-
-            <Link to="/login">
-                <Button variant = "contained"
-                            color = "primary"
-                            style = {{float:"right",marginRight:"3em"}}
-                            onClick = {logout()}
-                            label="Logout"
-                    ></Button>
-            </Link>
-
-            <Link to="/restaurant">
-                <Button variant = "contained"
-                        color = "primary"
-                        style = {{float:"right",marginRight:"3em"}}
-                        label="Restaurant"
-                ></Button>
-            </Link>
-
-            <Link to="/giftshop">
-                <Button variant = "contained"
-                        color = "primary"
-                        style = {{float:"right",marginRight:"3em"}}
-                        label="Gift Shop"
-                ></Button>
-            </Link>
-
-            <Link to="/visitorprofile">
-                <Button variant = "contained"
-                        color = "primary"
-                        style = {{float:"right",marginRight:"3em"}}
-                        label="Profile"
-                ></Button>
-            </Link>
-
-            
-
-                </div >
-
                 <div >
                     <Tabs
                         value={value}

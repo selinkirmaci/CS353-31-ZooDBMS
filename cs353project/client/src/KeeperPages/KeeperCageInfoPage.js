@@ -62,9 +62,15 @@ export default function CoordinatorCagePageInfo(props) {
     const [open2, setOpen2] = React.useState(false);
     const [value, setValue] = React.useState('Dione');
     const [cages,setCages] = React.useState([]);
+    const [foodAmount,setFoodAmount] = React.useState([]);
+
 
     const handleClickListItem = () => {
-        setOpen2(true);
+        Axios.post("http://localhost:3001/api/regularizeFood", {
+            cageID:props.cageID,
+        }).then((response)=>{
+        });
+        window.location.reload();
     };
 
     const handleClose2 = (newValue) => {
@@ -75,20 +81,29 @@ export default function CoordinatorCagePageInfo(props) {
         }
     };
     useEffect(()=>{
-        Axios.post("http://localhost:3001/api/getAnimalsOfCage", {
+        const firstReq = Axios.post("http://localhost:3001/api/getAnimalsOfCage", {
             cageID:props.cageID,
-        }).then((response)=>{
-            setCages(response.data);
+        });
+
+        const secondReq =Axios.post("http://localhost:3001/api/getFoodAmount", {
+            cageID:props.cageID,
+        });
+
+        Axios.all([firstReq,secondReq]).then((response)=>{
+            setCages(response[0].data);
+            setFoodAmount(response[1].data[0]);
         });
     },[]);
+
 
 
 
     return (
         <div>
             <Dialog fullScreen open={props.open} onClose={props.handleClose} TransitionComponent={Transition}>
-                <AppBar className={classes.appBar}>
+                <AppBar title = {foodAmount.foodAmount} className={classes.appBar}>
                     <Toolbar>
+
                         <IconButton edge="start" color="inherit" onClick={props.handleClose} aria-label="close">
                             <CloseIcon />
                         </IconButton>
@@ -116,9 +131,11 @@ export default function CoordinatorCagePageInfo(props) {
                             )
                         }
                     </Grid>
+                    <Typography align = 'center' variant="h3" className={classes.title}>
+                        Food Amout : {foodAmount.foodAmount}
+                    </Typography>
                 </div>
             </Dialog>
-
         </div>
     );
 }

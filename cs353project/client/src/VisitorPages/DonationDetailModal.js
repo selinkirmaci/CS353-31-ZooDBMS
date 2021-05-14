@@ -6,7 +6,19 @@ import TextField from '@material-ui/core/TextField';
 export default function DonationDetailModal(props)  {
     const [money,setMoney] = React.useState(0);
     const[donationAmount,setDonationAmount] = React.useState("");
+    const [user,setUser] = React.useState("");
 
+
+    React.useEffect(()=>{
+
+        const secondReq = Axios.post("http://localhost:3001/api/getUserInformation", {
+            userID:localStorage.getItem('userID'),
+        });
+        Axios.all([secondReq]).then((response)=>{
+            setUser(response[0].data[0]);
+        });
+    },[]);
+    /*
     React.useEffect(()=>{
 
         Axios.post("http://localhost:3001/api/getUserMoney", {
@@ -19,14 +31,10 @@ export default function DonationDetailModal(props)  {
 
 
     });
+
+     */
     const submit = () => {
 
-        /*
-        Axios.put("http://localhost:3001/api/updateUserMoney",{
-            userID: props.userId,
-            price: props.price,
-        });
-         */
         const firstReq =   Axios.put("http://localhost:3001/api/updateMoneyRaised",{
             userID: localStorage.getItem('userID'),
             price: donationAmount,
@@ -60,7 +68,7 @@ export default function DonationDetailModal(props)  {
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-                <h5>You have {money} amount of money.</h5>
+                <h5>You have {user.amountOfMoney} amount of money.</h5>
                 <br/>
                 <h5>How much would you like to donate?</h5>
                 <br/>

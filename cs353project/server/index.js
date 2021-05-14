@@ -282,6 +282,27 @@ app.post("/api/login" ,(req,res)=>{
     });
 });
 
+app.post("/api/regularizeFood" ,(req,res)=>{
+    const cageID = req.body.cageID;
+
+    const sqlInsert = "update regularize_food_cage set foodAmount = foodAmount+10 where cageID = ?";
+
+
+    db.query(sqlInsert,[cageID],(err,result)=>{
+        res.send(result);
+    });
+});
+app.post("/api/getFoodAmount" ,(req,res)=>{
+    const cageID = req.body.cageID;
+
+    const sqlInsert = "select foodAmount from regularize_food_cage where cageID = ?";
+
+    db.query(sqlInsert,[cageID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+
 app.post("/api/addNewGroupTour" ,(req,res)=>{
 
     const name = req.body.name;
@@ -340,6 +361,53 @@ app.post("/api/addNewConservationalOrganization" ,(req,res)=>{
     });
     db.query(sqlInsert2,[goal],(err,result)=>{
         console.log(err);
+    });
+});
+app.post("/api/makeComment" ,(req,res)=>{
+
+    const comment = req.body.comment;
+    const eventID = req.body.eventID;
+
+    const sqlInsert = "INSERT INTO comment (comment) VALUES (?);";
+    const sqlInsert2 = "INSERT INTO post_comment VALUES ((select max(commentID) from comment),?);";
+
+    db.query(sqlInsert,[comment],(err,result)=>{
+        console.log(err);
+    });
+    db.query(sqlInsert2,[eventID],(err,result)=>{
+        console.log(err);
+    });
+
+});
+app.post("/api/displayComments" ,(req,res)=>{
+
+    const eventID = req.body.eventID;
+
+    console.log("event id" + eventID);
+
+    const sqlInsert = "SELECT c.comment FROM comment c,post_comment pc where c.commentID=pc.commentID and pc.eventID = ?;";
+
+    db.query(sqlInsert,[eventID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+app.post("/api/buySouvenir" ,(req,res)=>{
+
+    const sID = req.body.sID;
+
+    const sqlInsert = "update souvenir set stockAmount = stockAmount - 1 where souvenirID = ?;";
+
+    db.query(sqlInsert,[sID],(err,result)=>{
+        res.send(result);
+    });
+});
+
+app.get("/api/displayGifts" ,(req,res)=>{
+    const sqlInsert = "SELECT * FROM souvenir;";
+
+    db.query(sqlInsert,(err,result)=>{
+        res.send(result);
     });
 });
 

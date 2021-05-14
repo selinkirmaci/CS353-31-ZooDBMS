@@ -72,7 +72,7 @@ function KeeperHomepage(props) {
                             {
                                 return (
                                     <Grid item xs={2}>
-                                        <KeeperCageCard keeperID = {localStorage.getItem('userID')} cageID = {event.cageID} animalName = {event.name} animal={event.animalType}
+                                        <KeeperCageCard cageID={event.cageID} keeperID = {localStorage.getItem('userID')} cageID = {event.cageID} animalName = {event.name} animal={event.animalType}
                                         />
                                     </Grid>
                                 )

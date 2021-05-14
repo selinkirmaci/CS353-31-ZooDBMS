@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { PinDropSharp } from '@material-ui/icons';
 import RegisterEventCardDetail from "./RegisterEventCardDetail";
 import Axios from "axios";
+import MakeCommentDialog from "./MakeCommentDialog";
 
 const useStyles = makeStyles({
     root: {
@@ -31,6 +32,8 @@ export default function ImgMediaCard(props) {
     };
 
     const [modalShow, setModalShow] = React.useState(false);
+    const [modalShowComment, setModalShowComment] = React.useState(false);
+
     return (
         <Card className={classes.root}>
             <CardActionArea>
@@ -54,7 +57,7 @@ export default function ImgMediaCard(props) {
                 <Button size="small" color="primary" onClick={submit}>
                     {props.down2}
                 </Button>
-                <Button size="small" color="primary" onClick={() => setModalShow(true)}>
+                <Button size="small" color="primary" onClick={() => setModalShowComment(true)}>
                     {props.down3}
                 </Button>
                 <RegisterEventCardDetail
@@ -72,6 +75,7 @@ export default function ImgMediaCard(props) {
                     rightModalButton={props.rightModalButton}
                     onHide={() => setModalShow(false)}
                 />
+                <MakeCommentDialog open = {modalShowComment} onClose={() => setModalShowComment(false)} eventID = {props.eventID}></MakeCommentDialog>
             </CardActions>
         </Card>
     );

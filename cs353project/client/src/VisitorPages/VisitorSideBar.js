@@ -21,6 +21,9 @@ import PetsIcon from '@material-ui/icons/Pets';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import RedeemIcon from '@material-ui/icons/Redeem';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const drawerWidth = 240;
 
@@ -98,6 +101,12 @@ export default function VisitorSideBar(props) {
             window.location.href="/visitorhomepage";
         else if(index === 1)
             window.location.href="/visitorcomplaintpage";
+        else if(index === 2)
+            window.location.href="/giftshop";
+        else if(index === 3)
+            window.location.href="/visitorprofile";
+        else if(index === 4)
+            window.location.href="/login";
     };
 
     return (
@@ -140,9 +149,9 @@ export default function VisitorSideBar(props) {
                 </div>
                 <Divider />
                 <List>
-                    {['Homepage','Make a Complaint'].map((text, index) => (
+                    {['Homepage','Make a Complaint','Gift Shop','Profile','Logout'].map((text, index) => (
                         <ListItem onClick={() => handleClick(index)} button key={text}>
-                            <ListItemIcon>{index === 0 ? <HomeIcon/> :  <SpeakerNotesIcon/>}</ListItemIcon>
+                            <ListItemIcon>{index === 0 ? <HomeIcon/> : index === 1 ? <SpeakerNotesIcon/> : index ===2 ? <RedeemIcon /> :index ===3? <AccountCircleIcon/>:<ExitToAppIcon/>}</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}
