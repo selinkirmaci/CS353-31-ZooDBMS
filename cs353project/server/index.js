@@ -672,7 +672,7 @@ app.post("/api/registerToEvent" ,(req,res)=>{
 app.post("/api/getAnimalTreatments" ,(req,res)=>{
     const animalID = req.body.animalID;
 
-    const sqlInsert = "SELECT * FROM animal,veterinarian,user where animalID in (select a.animalID from animal a, treatment_request t where a.animalID = t.animalID and a.animalID = ? and t.status = 'pending') and vetID in (select t.vetID from animal a, treatment_request t where a.animalID = t.animalID and a.animalID = ? and t.status = 'pending') and vetID = userID;";
+    const sqlInsert = "SELECT * FROM animal,veterinarian,user where animalID in (select a.animalID from animal a, treatment_request t where a.animalID = t.animalID and a.animalID = ? and t.status = 'accepted') and vetID in (select t.vetID from animal a, treatment_request t where a.animalID = t.animalID and a.animalID = ? and t.status = 'accepted') and vetID = userID;";
 
 
     db.query(sqlInsert,[animalID,animalID],(err,result)=>{
