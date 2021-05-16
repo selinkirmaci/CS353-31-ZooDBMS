@@ -21,6 +21,7 @@ import PetsIcon from '@material-ui/icons/Pets';
 import HomeIcon from '@material-ui/icons/Home';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';
 import SpeakerNotesIcon from '@material-ui/icons/SpeakerNotes';
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 
 
 const drawerWidth = 240;
@@ -98,9 +99,10 @@ export default function CoordinatorSideBar(props) {
 
         if(index === 0)
             window.location.href="/keeperhomepage";
-        else if(index === 1)
-            window.location.href="/displayTrainings";
-
+        else if(index === 1) {
+            window.location.href = "/login";
+            localStorage.setItem('userID', 0);
+        }
 
     };
 
@@ -144,9 +146,9 @@ export default function CoordinatorSideBar(props) {
                 </div>
                 <Divider />
                 <List>
-                    {['Homepage','Cages','Refund Requests','Display Complaints'].map((text, index) => (
+                    {['Homepage','Logout'].map((text, index) => (
                         <ListItem onClick={() => handleClick(index)} button key={text}>
-                            <ListItemIcon>{index === 0 ? <HomeIcon/> : index === 1 ? <PetsIcon/> : index ===2 ? <LocalAtmIcon /> : <SpeakerNotesIcon/>}</ListItemIcon>
+                            <ListItemIcon>{index === 0 ? <HomeIcon/> :  <ExitToAppIcon/> }</ListItemIcon>
                             <ListItemText primary={text} />
                         </ListItem>
                     ))}

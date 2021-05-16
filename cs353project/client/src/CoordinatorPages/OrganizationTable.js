@@ -19,6 +19,8 @@ import Axios from "axios";
 const handleDelete = (eventID) => {
     var e = 'http://localhost:3001/api/deleteConOrg/' + eventID;
     Axios.delete(e);
+    window.location.reload();
+
 };
 
 

@@ -36,9 +36,7 @@ app.post("/api/getUserMoney" ,(req,res)=>{
     const visitorID = req.body.userID;
     const sqlInsert = "SELECT amountOfMoney FROM visitor where visitorID = ?;";
     db.query(sqlInsert,[visitorID],(err,result)=>{
-        //var d = JSON.parse(JSON.stringify(result[0]));
-        //res.send(d.amountOfMoney.toString());
-        console.log("öomeınl");
+        res.send(result);
     });
 });
 
@@ -215,7 +213,7 @@ app.post("/api/inviteVeterinarian" ,(req,res)=>{
 app.post("/api/listTreatmentRequests" ,(req,res)=>{
     const vetID = req.body.vetID;
 
-    const sqlInsert = "SELECT * FROM animal WHERE animalID in (SELECT animalID FROM treatment_request WHERE vetID = ? and status = 'pending');";
+    const sqlInsert = "SELECT * FROM animal WHERE animalID in (SELECT animalID FROM activetreatmentrequests WHERE vetID = ?);";
 
     db.query(sqlInsert,[vetID],(err,result)=>{
         res.send(result);
@@ -274,11 +272,15 @@ app.post("/api/login" ,(req,res)=>{
     console.log(password);
 
     db.query(sqlInsert,[username,password],(err,result)=>{
-        var d = JSON.parse(JSON.stringify(result[0]));
-        console.log(d.userID);
-        console.log("succesfull login");
-        res.send(d.userID.toString());
-        console.log("after readin toStirng")
+        console.log(result);
+        if(result.length===0)
+            res.send(result);
+        else {
+            var d = JSON.parse(JSON.stringify(result[0]));
+            console.log(d.userID);
+            console.log("succesfull login");
+            res.send(d.userID.toString());
+        }
     });
 });
 
@@ -453,6 +455,10 @@ app.delete("/api/deleteEducational/:eventID" ,(req,res)=>{
     const eventID = req.params.eventID;
     const sqlInsert = "DELETE FROM event WHERE eventID = ? and coordID = (SELECT MAX(coordID) FROM coordinator);";
     const sqlInsert2 = "DELETE FROM educational_program WHERE eventID = ?;";
+    const sqlInsert3 = "DELETE FROM invite WHERE eventID = ?;";
+
+    db.query(sqlInsert3,[eventID],(err,result)=>{
+    });
     db.query(sqlInsert2,[eventID],(err,result)=>{
     });
     db.query(sqlInsert,[eventID],(err,result)=>{
@@ -463,15 +469,28 @@ app.delete("/api/deleteGroupTour/:eventID" ,(req,res)=>{
     const eventID = req.params.eventID;
     const sqlInsert = "DELETE FROM event WHERE eventID = ? and coordID = (SELECT MAX(coordID) FROM coordinator);";
     const sqlInsert2 = "DELETE FROM group_tour WHERE eventID = ?;";
+    const sqlDelete = "delete from request_refund where eventID = ?;"
+    const sqlDelete2 = "delete from register_event where eventID = ?;"
+    const sqlDelete3 = "delete from post_comment where eventID = ?;"
+
+    db.query(sqlDelete3,[eventID],(err,result)=>{
+    });
+    db.query(sqlDelete2,[eventID],(err,result)=>{
+    });
+    db.query(sqlDelete,[eventID],(err,result)=>{
+    });
     db.query(sqlInsert2,[eventID],(err,result)=>{
     });
     db.query(sqlInsert,[eventID],(err,result)=>{
     });
+
+
 });
 app.delete("/api/deleteConOrg/:eventID" ,(req,res)=>{
     const eventID = req.params.eventID;
     const sqlInsert = "DELETE FROM event WHERE eventID = ? and coordID = (SELECT MAX(coordID) FROM coordinator);";
     const sqlInsert2 = "DELETE FROM conservation_organization WHERE eventID = ?;";
+
     db.query(sqlInsert2,[eventID],(err,result)=>{
     });
     db.query(sqlInsert,[eventID],(err,result)=>{
@@ -517,9 +536,9 @@ app.put("/api/updateUserMoney" ,(req,res)=>{
     const userID = req.body.userID;
     const price = req.body.price;
 
-    const sqlInsert = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) - ? where visitorID = ?;";
+    const sqlInsert = "update visitor set amountOfMoney = amountOfMoney - ? where visitorID = ?;";
 
-    db.query(sqlInsert,[userID,price,userID],(err,result)=>{
+    db.query(sqlInsert,[price,userID],(err,result)=>{
     });
 });
 
@@ -527,10 +546,10 @@ app.put("/api/uploadMoney" ,(req,res)=>{
     const userID = req.body.userID;
     const price = req.body.price;
 
-    const sqlInsert = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) + ? where visitorID = ?;";
+    const sqlInsert = "update visitor set amountOfMoney = amountOfMoney + ? where visitorID = ?;";
 
 
-    db.query(sqlInsert,[userID,price,userID],(err,result)=>{
+    db.query(sqlInsert,[price,userID],(err,result)=>{
     });
 });
 
@@ -550,8 +569,10 @@ app.put("/api/updateMoneyRaised" ,(req,res)=>{
 app.put("/api/giveRefund" ,(req,res)=>{
     const userID = req.body.userID;
     const eventID = req.body.eventID;
+    console.log(userID);
+    console.log(eventID);
 
-    const sqlInsert = "update visitor v set v.amountOfMoney = v.amountOfMoney + (select g.price from event e,request_refund r,group_tour g where e.eventID = r.eventID and e.eventID = ? and e.eventID = g.eventID) where v.visitorID = ?; ";
+    const sqlInsert = "update visitor v set v.amountOfMoney = v.amountOfMoney + (select g.price from request_refund r,group_tour g where g.eventID = ? and g.eventID = r.eventID and r.visitorID = v.visitorID) where v.visitorID = ?; ";
 
 
     db.query(sqlInsert,[eventID,userID],(err,result)=>{
@@ -625,18 +646,25 @@ app.post("/api/registerToEvent" ,(req,res)=>{
     const visitorID = req.body.userID;
     const eventID = req.body.eventID;
     const price = req.body.price;
+    const money = req.body.money;
 
 
     const sqlInsert = "INSERT INTO register_event (visitorID,eventID) VALUES (?,?);";
-    const sqlInsert2 = "update visitor set amountOfMoney = (select amountOfMoney from user u, visitor v  where u.userID = ? and u.userID = v.visitorID) - ? where visitorID = ?;";
+    const sqlInsert2 = "update visitor set amountOfMoney = amountOfMoney - ? where visitorID = ?;";
+    const sqlGet = "select amountOfMoney from visitor where visitorID = ?;"
 
-    console.log(visitorID);
-    console.log(eventID);
+    console.log("in register to event");
 
-    db.query(sqlInsert,[visitorID,eventID],(err,result)=>{
-    });
-    db.query(sqlInsert2,[visitorID,price,visitorID],(err,result)=>{
-    });
+    if(money >= price) {
+        db.query(sqlInsert, [visitorID, eventID], (err, result) => {
+        });
+        db.query(sqlInsert2, [price, visitorID], (err, result) => {
+            res.send(result);
+        });
+    }else
+    {
+        res.send();
+    }
 });
 
 
@@ -679,6 +707,23 @@ app.post("/api/sendComplaint" ,(req,res)=>{
     });
 
 });
+app.post("/api/getWantedTour" ,(req,res)=>{
+
+    const name = req.body.name;
+    console.log(name);
+
+    const sqlInsert = "SELECT * FROM event where name LIKE CONCAT(?,'%') and eventID in (SELECT g.eventID FROM group_tour g);";
+
+
+    db.query(sqlInsert,[name],(err,result)=>{
+        console.log(result);
+        res.send(result);
+
+    });
+
+
+});
+
 
 
 

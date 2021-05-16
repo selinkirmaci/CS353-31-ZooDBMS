@@ -18,23 +18,40 @@ const useStyles = makeStyles({
 
 export default function ImgMediaCard(props) {
     const classes = useStyles();
+    const [money,setMoney] = React.useState([]);
 
-    const [modalShow, setModalShow] = React.useState(false);
-    const submit = () => {
-        const secondReq =  Axios.put("http://localhost:3001/api/updateUserMoney",{
+    React.useEffect(()=>{
+        const secondReq = Axios.post("http://localhost:3001/api/getUserMoney", {
             userID: localStorage.getItem('userID'),
-            price: props.price,
         });
-
-        const firstReq =  Axios.post("http://localhost:3001/api/buySouvenir",{
-            sID: props.sID,
+        Axios.all([secondReq]).then((response)=>{
+            setMoney(response[0].data[0]);
         });
+    },[]);
 
-        Axios.all([secondReq,firstReq]).then((response)=>{
-            alert('success');
-        },[]);
-        alert('successful buy');
-        window.location.reload();
+
+    const submit = () => {
+        if(money.amountOfMoney >= props.price) {
+
+            const secondReq = Axios.put("http://localhost:3001/api/updateUserMoney", {
+                userID: localStorage.getItem('userID'),
+                price: props.price,
+            });
+
+            const firstReq = Axios.post("http://localhost:3001/api/buySouvenir", {
+                sID: props.sID,
+            });
+
+            Axios.all([secondReq, firstReq]).then((response) => {
+                alert('success');
+            }, []);
+            alert('successful buy');
+            window.location.reload();
+        }
+        else
+        {
+            alert('Your money is not enough');
+        }
     };
     var imageURL = '/images/' + props.name + '.jpg';
 

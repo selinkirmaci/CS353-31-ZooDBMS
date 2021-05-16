@@ -105,8 +105,11 @@ export default function VisitorSideBar(props) {
             window.location.href="/giftshop";
         else if(index === 3)
             window.location.href="/visitorprofile";
-        else if(index === 4)
-            window.location.href="/login";
+        else if(index === 4) {
+            window.location.href = "/login";
+
+            localStorage.setItem('userID', 0);
+        }
     };
 
     return (

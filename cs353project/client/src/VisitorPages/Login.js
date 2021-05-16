@@ -32,11 +32,17 @@ export default function Login()
             username:username,
             password:password,
         }).then((response)=>{
-            console.log(response.data);
-            setUserID(response.data);
-            localStorage.setItem('userID',response.data);
-
-            alert('success');
+            if(response.data.length === 0)
+            {
+                alert('failed to login');
+                window.location.href="/login";
+            }else {
+                console.log(response.data);
+                setUserID(response.data);
+                localStorage.setItem('userID', response.data);
+                console.log(response);
+                alert('success');
+            }
         });
         console.log(userID);
     }
@@ -121,10 +127,14 @@ export default function Login()
                                 {/* <text style={{marginLeft: '70%',textDecorationLine: 'underline'}}>Forgot password?</text> */}
                             </div>
                         </div>
-                        <Button style={{color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '30%',left: '41%'}} label="Try" className="p-button-rounded " onClick={handleClickOpen} />
 
+                        <Link to={{
+                            pathname: link,
+                            data: [{userID:userID}],
+                        }}>
+                             <Button style={{color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '30%',left: '41%'}} label="Sign In" className="p-button-rounded "onClick={submit} />
+                        </Link>
 
-                             <Button style={{color: 'white',backgroundImage: 'linear-gradient(to bottom right,#8C4FB7,#3834DE)' , width : '30%',left: '41%'}} label="Sign In" className="p-button-rounded " />
                         <div>
                             <br/>
                             <Link to="/signup">

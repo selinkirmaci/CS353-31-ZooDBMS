@@ -31,8 +31,8 @@ import Axios from "axios";
 // import JoinTourModal from "./JoinTourModal";
 // import DonationModal from "./DonationModal";
 import fs from 'fs';
-
-
+import TextField from '@material-ui/core/TextField';
+import SeeSimilarEvents from "./SeeSimilarEvents";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -84,6 +84,8 @@ function logout(){
 function VisitorHomePage(props) {
     const classes = useStyles();
     const [value, setValue] = React.useState(0);
+    const [open, setOpen] = React.useState(0);
+
     const [tourType] = React.useState(0);
     const [choseEventOpen, setChoseEventClose] = React.useState(0);
     const [group,setGroup] = React.useState([]);
@@ -91,6 +93,9 @@ function VisitorHomePage(props) {
     const [userID,setUserID] = React.useState("");
     const [money,setMoney] = React.useState("");
     const [user,setUser] = React.useState([]);
+    const [search,setSearch] =  React.useState("");
+    const [options,setOptions] =  React.useState([]);
+
 
 
 
@@ -126,7 +131,6 @@ function VisitorHomePage(props) {
         Axios.all([firstReq,secondReq,forthReq]).then((response)=>{
             setGroup(response[0].data);
             setCon(response[1].data);
-            //setMoney((response[2].data).amountOfMoney);
             setUser(response[2].data);
             console.log(response[0].data);
             console.log("done3");
@@ -136,10 +140,33 @@ function VisitorHomePage(props) {
 
     },[]);
 
+    const handleSearch = () => {
+        Axios.post("http://localhost:3001/api/getWantedTour",{
+            name:search,
+        }).then((response)=>{
+            setOptions(response.data);
+        });
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+
+
     return(
         <div>
             <VisitorSideBar title = "Visitor"></VisitorSideBar>
+            <SeeSimilarEvents options = {options } open =  {open} handleClose = {handleClose}></SeeSimilarEvents>
                 <div >
+                    <TextField
+                        id="standard-basic"
+                        label="Serach for event"
+                        width = "50em"
+                        onChange = {(e)=>setSearch(e.target.value)}
+                    />
+                    <Button onClick={handleSearch}>Search</Button>
+
                     <Tabs
                         value={value}
                         onChange={handleChange}
@@ -166,7 +193,6 @@ function VisitorHomePage(props) {
                         {/* <TabPanel value={value} index={1} dir={theme.direction}>
                             <h1>Educational Programs</h1>
                             <EducationalTable></EducationalTable>
-
                         </TabPanel> */}
                         <TabPanel value={value} index={1} dir={theme.direction}>
                             {/* <h1>Conservational Organizations</h1> */}

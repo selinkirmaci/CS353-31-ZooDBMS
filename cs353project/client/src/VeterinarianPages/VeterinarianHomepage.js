@@ -92,20 +92,6 @@ function VeterinarianHomepage(props) {
     const handleChoseEventClose = () => {
         setChoseEventClose(false);
     };
-    /*
-    useEffect(()=>{
-
-        setVetID(props.location.data[0].userID);
-
-        Axios.post("http://localhost:3001/api/listTreatmentRequests", {
-            vetID:vetID,
-        }).then((response)=>{
-            setTreatments(response.data);
-        });
-
-    });
-
-     */
     useEffect(()=>{
 
         setVetID(localStorage.getItem('userID'));

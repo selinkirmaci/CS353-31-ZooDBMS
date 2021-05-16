@@ -18,38 +18,28 @@ export default function DonationDetailModal(props)  {
             setUser(response[0].data[0]);
         });
     },[]);
-    /*
-    React.useEffect(()=>{
 
-        Axios.post("http://localhost:3001/api/getUserMoney", {
-            userID:localStorage.getItem('userID'),
-        }).then((response)=>{
-            setMoney(response.data);
-            //console.log(money);
-        });
-
-
-
-    });
-
-     */
     const submit = () => {
+        if(user.amountOfMoney >= donationAmount) {
 
-        const firstReq =   Axios.put("http://localhost:3001/api/updateMoneyRaised",{
-            userID: localStorage.getItem('userID'),
-            price: donationAmount,
-            eventID : props.eventID,
+            const firstReq = Axios.put("http://localhost:3001/api/updateMoneyRaised", {
+                userID: localStorage.getItem('userID'),
+                price: donationAmount,
+                eventID: props.eventID,
+            });
+            const secondReq = Axios.put("http://localhost:3001/api/updateUserMoney", {
+                userID: localStorage.getItem('userID'),
+                price: donationAmount,
+            });
 
-        });
-        const secondReq =  Axios.put("http://localhost:3001/api/updateUserMoney",{
-            userID: localStorage.getItem('userID'),
-            price: donationAmount,
-        });
-
-        Axios.all([firstReq,secondReq]).then((response)=>{
-            alert('success');
-           },[]);
-        alert('success');
+            Axios.all([firstReq, secondReq]).then((response) => {
+                alert('success');
+            }, []);
+            alert('Donation Succesful');
+        }
+        else {
+            alert("Your money is not enough");
+        }
         props.onHide();
 
     };

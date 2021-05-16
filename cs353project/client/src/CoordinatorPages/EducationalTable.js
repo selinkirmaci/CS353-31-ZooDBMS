@@ -61,6 +61,7 @@ export default function EducationalTable(props) {
     const handleDelete = (eventID) => {
         var e = 'http://localhost:3001/api/deleteEducational/' + eventID;
         Axios.delete(e);
+        window.location.reload();
     };
 
     const handleInvitation = (eventID) => {

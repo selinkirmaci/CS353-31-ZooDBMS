@@ -6,33 +6,37 @@ import DisplayComments from "./DisplayComments";
 export default function EventDetailModal(props)  {
 
     const [comments,setComments] = React.useState([]);
+    const [money,setMoney] = React.useState([]);
 
     React.useEffect(()=>{
         const firstReq = Axios.post("http://localhost:3001/api/displayComments", {
             eventID:props.eventID,
         });
-        Axios.all([firstReq]).then((response)=>{
+        const secondReq = Axios.post("http://localhost:3001/api/getUserMoney", {
+            userID: localStorage.getItem('userID'),
+        });
+        Axios.all([firstReq,secondReq]).then((response)=>{
             setComments(response[0].data);
+            setMoney(response[1].data[0]);
         });
     },[]);
 
     const submit = () => {
-        /*
-        Axios.put("http://localhost:3001/api/updateUserMoney",{
-            userID: props.userId,
-            price: props.price,
-        });
-         */
+        console.log( money.amountOfMoney);
         Axios.post("http://localhost:3001/api/registerToEvent",{
             userID: localStorage.getItem('userID'),
             eventID: props.eventID,
             price: props.price,
+            money : money.amountOfMoney,
 
         }).then((response)=>{
-            console.log(response.data);
-            //setUserID(response.data);
-            alert('success');
+            console.log(response);
+            if(response.data==="")
+                alert('Failed to register, your money is not enough!');
+            else
+                alert('successful register');
         });
+
         props.onHide();
 
     };
